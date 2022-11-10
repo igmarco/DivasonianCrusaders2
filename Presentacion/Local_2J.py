@@ -6,7 +6,6 @@ from MD.Fichas.Guerrero import Guerrero
 from MD.Fichas.Lancero import Lancero
 from MD.Instruccion.Operacion import Movimiento, Disparo
 
-
 def Local_2J(nombre1, nombre2):
     rendicion1, rendicion2 = False, False
 
