@@ -18,7 +18,7 @@ class Ficha:
 
         self.puedeMover = True
 
-    def tieneHachaDivasonica(self):
+    def tieneHacha(self):
         return self.hachaDivasonica is not None
 
     def realizarAtaque(self,ficha=None):
