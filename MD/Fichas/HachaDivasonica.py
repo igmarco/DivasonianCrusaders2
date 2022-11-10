@@ -15,3 +15,6 @@ class HachaDivasonica ():
     def sufrirDanoPorTurno(self):
         return self.vidaPorTurno + m.floor(np.random.rand()*2*self.vidaPorTurnoVariable-1)
 
+    def copy(self):
+        return HachaDivasonica(self.danoExtra, self.danoExtraVariable, self.vidaPorTurno, self.vidaPorTurnoVariable)
+

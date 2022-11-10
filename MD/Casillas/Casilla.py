@@ -3,7 +3,7 @@ import math as m
 
 class Casilla ():
 
-    def __init__(self,hachaDivasonica=None, casillaDeCura=False, curacionAuxiliar=None):
+    def __init__(self,hachaDivasonica=None, casillaDeCuracion=False, curacionAuxiliar=None):
         self.hachaDivasonica = hachaDivasonica;
         if casillaDeCura:
             self.curacionAuxiliar = 5
@@ -26,3 +26,6 @@ class Casilla ():
             return type(self).__name__ + ' con Hacha'
         else:
             return type(self).__name__
+
+    def copy(self):
+        return Casilla(self.hachaDivasonica.copy(), self.casillaDeCuracion, self.curacionAuxiliar)

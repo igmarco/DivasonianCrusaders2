@@ -55,3 +55,6 @@ class Ficha:
             return type(self).__name__ + Faccion[self.faccion] + ', ' + self.vida + 'ps' + ' con Hacha'
         else:
             return type(self).__name__ + Faccion[self.faccion] + ', ' + self.vida + 'ps'
+
+    def copy(self):
+        return Ficha(self.faccion, self.hachaDivasonica.copy(), self.dano, self.vida, self.vidaMaxima, self.danoVariable)

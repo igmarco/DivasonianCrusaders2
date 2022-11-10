@@ -349,5 +349,9 @@ class Tablero:
     def getFromElemento(self, elemento):
         #TODO:
 
-
+    def copy(self):
+        nodosCopiados = []
+        for i in range(45):
+            nodosCopiados.append(self.nodos[i].copy())
+        return Tablero(nodosCopiados)
 

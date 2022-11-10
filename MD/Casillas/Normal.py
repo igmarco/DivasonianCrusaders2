@@ -4,4 +4,6 @@ class Normal(Casilla):
 
     def __init__(self, hachaDivasonica=None, casillaDeCuracion=None, curacionAuxiliar=None):
         super().__init__(hachaDivasonica, casillaDeCuracion, curacionAuxiliar)
-        pass
+
+    def copy(self):
+        return Normal(self.hachaDivasonica.copy(), self.casillaDeCuracion, self.curacionAuxiliar)

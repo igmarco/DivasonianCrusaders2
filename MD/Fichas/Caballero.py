@@ -14,3 +14,6 @@ class Caballero (Ficha):
     def realizarCarga(self, ficha):
         hd = self.hachaDivasonica.sumarDano() if self.hachaDivasonica is not None else 0
         return m.floor(self.danoCarga + m.floor(np.random.rand()*2*self.danoVariable - self.danoVariable + hd)*1.2)
+
+    def copy(self):
+        return Caballero(self.faccion, self.hachaDivasonica.copy(), self.dano, self.vida, self.vidaMaxima, self.danoVariable, self.danoCarga)

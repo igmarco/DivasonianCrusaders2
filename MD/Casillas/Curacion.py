@@ -16,3 +16,6 @@ class Curacion(Casilla):
 
     def __eq__(self,casilla):
         return casilla is not None and type(casilla) == type(self) and casilla.identificador() == self.identificador and casilla.identificador() != 0
+
+    def copy(self):
+        return Curacion(self.hachaDivasonica.copy(), self.curacion, self.curacionVariable, self.identificador)

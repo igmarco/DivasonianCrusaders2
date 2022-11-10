@@ -156,3 +156,6 @@ class Nodo():
             return self.fichaDefensora.puedeMover
         if ficha == self.fichaAtacante:
             return self.fichaAtacante.puedeMover
+
+    def copy(self):
+        return Nodo(self.casilla.copy(), self.fichaDefensora.copy(), self.fichaAtacante.copy(), self.cayoProyectil)

@@ -15,3 +15,6 @@ class Copa(Casilla):
 
     def __eq__(self,casilla):
         return casilla is not None and type(casilla) == type(self) and casilla.faccion == self.faccion
+
+    def copy(self):
+        return Copa(self.hachaDivasonica.copy(), self.faccion, self.vida)
