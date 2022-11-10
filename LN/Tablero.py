@@ -52,6 +52,8 @@ class Tablero:
             hasta = desde - 9
         elif
 
+    # Dale Pablo titán fuersa bro
+
 
     def moverFichasDeLaMismaCasilla(self, ficha1, ficha2, casillaO, casillaDest1, casillaDest2):
         self.nodos[casillaO].ejecutarAtaquesDeHuidas()
@@ -257,13 +259,75 @@ class Tablero:
                 posiciones.remove(i)
         return posiciones
 
+    def dondePuedeMover(self, ficha):
+        movPosibles = []
+        dondeEsta = self.dondeEsta(ficha)
+
+        if dondeEsta - 9 >= 0:
+            movPosibles.append(dondeEsta - 9)
+        if dondeEsta - 8 >= 0:
+            movPosibles.append(dondeEsta - 8)
+        if dondeEsta - 10 >= 0:
+            movPosibles.append(dondeEsta - 10)
+        if dondeEsta - 1 >= 0:
+            movPosibles.append(dondeEsta - 1)
+        if dondeEsta + 9 <= 45:
+            movPosibles.append(dondeEsta + 9)
+        if dondeEsta + 8 <= 45:
+            movPosibles.append(dondeEsta + 8)
+        if dondeEsta + 10 <= 45:
+            movPosibles.append(dondeEsta + 10)
+        if dondeEsta + 1 <= 45:
+            movPosibles.append(dondeEsta + 1)
+
+        if dondeEsta == 0:
+            movPosibles.remove(8)
+        elif dondeEsta == 9:
+            movPosibles.remove(8)
+            movPosibles.remove(17)
+        elif dondeEsta == 18:
+            movPosibles.remove(8)
+            movPosibles.remove(17)
+            movPosibles.remove(26)
+        elif dondeEsta == 27:
+            movPosibles.remove(17)
+            movPosibles.remove(26)
+            movPosibles.remove(35)
+        elif dondeEsta == 36:
+            movPosibles.remove(26)
+            movPosibles.remove(35)
+            movPosibles.remove(44)
+        elif dondeEsta == 8:
+            movPosibles.remove(0)
+            movPosibles.remove(9)
+            movPosibles.remove(18)
+        elif dondeEsta == 17:
+            movPosibles.remove(9)
+            movPosibles.remove(18)
+            movPosibles.remove(27)
+        elif dondeEsta == 26:
+            movPosibles.remove(18)
+            movPosibles.remove(27)
+            movPosibles.remove(36)
+        elif dondeEsta == 35:
+            movPosibles.remove(27)
+            movPosibles.remove(36)
+        elif dondeEsta == 44:
+            movPosibles.remove(36)
+
+        for i in movPosibles:
+            if self.nodos[i].estaAqui(ficha.faccion):
+                movPosibles.remove(i)
+
+        return movPosibles
+
     def quienesNoPuedenMover(self, faccion):
         movPisibles = []
         for i in range(45):
             if not self.nodos[i].estaAqui(faccion): movPisibles.append(i)
         return movPisibles
 
-    def quienesPuedenMove(self, faccion):
+    def quienesPuedenMover(self, faccion):
         movPisibles = []
         for i in range(45):
             if self.nodos[i].estaAqui(faccion): movPisibles.append(i)
@@ -273,7 +337,7 @@ class Tablero:
         if self.nodos[casilla].estaAqui(faccion):
             f = self.nodos[casilla].getFichaDefensora().getFaccion
             return f if f == faccion else self.nodos[casilla].getFichaAtacante()
-        else
+        else:
             return None
 
    # def getNodo(self, i):
