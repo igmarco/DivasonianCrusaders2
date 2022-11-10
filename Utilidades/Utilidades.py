@@ -1,12 +1,12 @@
 Direccion = {
     0:'norte',
-    1:'sur',
+    1:'noreste',
     2:'este',
-    3:'oeste',
-	4:'noreste',
-	5:'noroeste',
-	6:'sureste',
-	7:'suroeste'
+    3:'sureste',
+	4:'sur',
+	5:'suroeste',
+	6:'oeste',
+	7:'noroeste'
 }
 
 Faccion = {
