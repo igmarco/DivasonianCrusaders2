@@ -3,7 +3,7 @@ import math as m
 
 class HachaDivasonica ():
 
-    def __init__(self, danoExtra, danoExtraVariable, vidaPorTurno, vidaPorTurnoVariable):
+    def __init__(self, danoExtra=10, danoExtraVariable=7, vidaPorTurno=5, vidaPorTurnoVariable=4):
         self.danoExtra = danoExtra;
         self.danoExtraVariable = danoExtraVariable;
         self.vidaPorTurno = vidaPorTurno;

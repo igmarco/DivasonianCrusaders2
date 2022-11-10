@@ -1,15 +1,20 @@
 import numpy as np
 import math as m
 
+from Utilidades.Utilidades import Faccion
+
+
 class Ficha:
 
-    def __init__(self, faccion, dano, vida, vidaMaxima, danoVariable, hachaDivasonica):
+    def __init__(self, faccion, hachaDivasonica, dano=None, vida=None, vidaMaxima=None, danoVariable=None):
         self.dano = dano
         self.vida = vida
         self.vidaMaxima = vidaMaxima
         self.danoVariable = danoVariable
         self.hachaDivasonica = hachaDivasonica
         self.faccion = faccion
+
+        self.movs = 2
 
         self.puedeMover = True
 
@@ -33,7 +38,7 @@ class Ficha:
     def curarse(self,v):
         self.vida = self.vida + v if self.vida + v < self.vidaMaxima else self.vidaMaxima
 
-    def equals(self,ficha):
+    def __eq__(self,ficha):
         return ficha is not None and ficha.faccion == self.faccion and type(ficha) == type(self)
 
     def realizarCarga(self, ficha):
@@ -44,3 +49,9 @@ class Ficha:
 
     def getMovs(self):
         return 2
+
+    def __str__(self):
+        if self.hachaDivasonica is not None:
+            return type(self).__name__ + Faccion[self.faccion] + ', ' + self.vida + 'ps' + ' con Hacha'
+        else:
+            return type(self).__name__ + Faccion[self.faccion] + ', ' + self.vida + 'ps'

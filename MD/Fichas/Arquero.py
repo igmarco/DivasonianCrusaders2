@@ -5,7 +5,8 @@ from MD.Fichas.Ficha import Ficha
 
 class Arquero (Ficha):
 
-    def __init__(self,faccion, dano=10, vida=75, vidaMaxima=75, danoVariable=3, hachaDivasonica=None, danoFlechas=10, danoflechasvariable=5):
+    def __init__(self,faccion, hachaDivasonica=None, dano=10, vida=75, vidaMaxima=75, danoVariable=3, danoFlechas=10, danoflechasvariable=5):
+        super().__init__(faccion, hachaDivasonica, dano, vida, vidaMaxima, danoVariable)
         self.danoFlechas = danoFlechas
         self.danoFlechasVariable = danoflechasvariable
 

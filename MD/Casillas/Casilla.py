@@ -3,7 +3,7 @@ import math as m
 
 class Casilla ():
 
-    def __init__(self,hachaDivasonica=None, casillaDeCura=None, curacionAuxiliar=None):
+    def __init__(self,hachaDivasonica=None, casillaDeCura=False, curacionAuxiliar=None):
         self.hachaDivasonica = hachaDivasonica;
         if casillaDeCura:
             self.curacionAuxiliar = 5
@@ -12,7 +12,7 @@ class Casilla ():
         else:
             self.curacionAuxiliar = 0
 
-    def equals(self,casilla):
+    def __eq__(self,casilla):
         return casilla is not None and type(casilla) == type(self)
 
     def tieneHacha(self):
@@ -20,3 +20,9 @@ class Casilla ():
 
     def casillaDeCura(self):
         return self.curacionAuxiliar != 0
+
+    def __str__(self):
+        if self.hachaDivasonica is not None:
+            return type(self).__name__ + ' con Hacha'
+        else:
+            return type(self).__name__
