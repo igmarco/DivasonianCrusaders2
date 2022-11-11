@@ -75,10 +75,7 @@ class Tablero:
     def moverFichaDireccion(self, ficha, direccion):
         desde = self.dondeEsta(ficha)
         hasta = self.moverDireccion(direccion, desde)
-        if not self.hayFicha(hasta, ficha.getFaccion()):
-            self.moverFicha(ficha, desde, hasta)
-        else:
-            self.nodos[self.dondeEsta(ficha)].getFicha(ficha).puedeMover = False
+        self.moverFicha(ficha, desde, hasta)
 
 
     def moverFichasALaVez(self, ficha1, dir1, ficha2, dir2):
@@ -87,69 +84,21 @@ class Tablero:
         desde2 = self.dondeEsta(ficha2)
         hasta2 = self.moverDireccion(dir2, desde2)
 
-        if desde1 == desde2 and hasta1 == hasta2:
-            if not self.hayFicha(hasta1, ficha1.getFaccion()) and not self.hayFicha(hasta2, ficha2.getFaccion()):
-                self.moverFichasDeLaMismaCasillaALaMismaCasilla(ficha1, ficha2, desde1, hasta1)
-            elif not self.hayFicha(hasta1, ficha1.getFaccion()):
-                self.moverFicha(ficha1, desde1, hasta1)
-                self.nodos[self.dondeEsta(ficha2)].getFicha(ficha2).puedeMover = False
-            elif not self.hayFicha(hasta2, ficha2.getFaccion()):
-                self.moverFicha(ficha2, desde2, hasta2)
-                self.nodos[self.dondeEsta(ficha1)].getFicha(ficha1).puedeMover = False
-            else:
-                self.nodos[self.dondeEsta(ficha2)].getFicha(ficha2).puedeMover = False
-                self.nodos[self.dondeEsta(ficha1)].getFicha(ficha1).puedeMover = False
         if desde1 == desde2:
-            if not self.hayFicha(hasta1, ficha1.getFaccion()) and not self.hayFicha(hasta2, ficha2.getFaccion()):
-                self.moverFichasDeLaMismaCasilla(ficha1, ficha2, desde1, hasta1)
-            elif not self.hayFicha(hasta1, ficha1.getFaccion()):
-                self.moverFicha(ficha1, desde1, hasta1)
-                self.nodos[self.dondeEsta(ficha2)].getFicha(ficha2).puedeMover = False
-            elif not self.hayFicha(hasta2, ficha2.getFaccion()):
-                self.moverFicha(ficha2, desde2, hasta2)
-                self.nodos[self.dondeEsta(ficha1)].getFicha(ficha1).puedeMover = False
-            else:
-                self.nodos[self.dondeEsta(ficha2)].getFicha(ficha2).puedeMover = False
-                self.nodos[self.dondeEsta(ficha1)].getFicha(ficha1).puedeMover = False
-        elif hasta1 == desde2 and hasta2 == desde1:
-            if not self.hayFicha(hasta1, ficha1.getFaccion()) and not self.hayFicha(hasta2, ficha2.getFaccion()):
-                self.cruzarFichas(ficha1, ficha2, desde1, desde2)
-            elif not self.hayFicha(hasta1, ficha1.getFaccion()):
-                self.moverFicha(ficha1, desde1, hasta1)
-                self.nodos[self.dondeEsta(ficha2)].getFicha(ficha2).puedeMover = False
-            elif not self.hayFicha(hasta2, ficha2.getFaccion()):
-                self.moverFicha(ficha2, desde2, hasta2)
-                self.nodos[self.dondeEsta(ficha1)].getFicha(ficha1).puedeMover = False
-            else:
-                self.nodos[self.dondeEsta(ficha2)].getFicha(ficha2).puedeMover = False
-                self.nodos[self.dondeEsta(ficha1)].getFicha(ficha1).puedeMover = False
+            self.moverFichasDeLaMismaCasilla(ficha1, ficha2, desde1, hasta1, hasta2)
+        elif hasta1 == desde2 and hasta2 == desde2:
+            self.cruzarFichas(ficha1, ficha2, desde1, desde2)
         elif hasta1 == desde2:
-            if not self.hayFicha(hasta2, ficha2.getFaccion()):
-                self.moverFicha(ficha2, desde2, hasta2)
-            if not self.hayFicha(hasta1, ficha1.getFaccion()):
-                self.moverFicha(ficha1, desde1, hasta1)
+            self.moverFicha(ficha2, desde2, hasta2)
+            self.moverFicha(ficha1, desde1, hasta1)
         elif hasta2 == desde1:
-            if not self.hayFicha(hasta1, ficha1.getFaccion()):
-                self.moverFicha(ficha1, desde1, hasta1)
-            if not self.hayFicha(hasta2, ficha2.getFaccion()):
-                self.moverFicha(ficha2, desde2, hasta2)
+            self.moverFicha(ficha1, desde1, hasta1)
+            self.moverFicha(ficha2, desde2, hasta2)
         elif hasta1 == hasta2:
-            if not self.hayFicha(hasta1, ficha1.getFaccion()) and not self.hayFicha(hasta2, ficha2.getFaccion()):
-                self.moverFichasALaMismaCasilla(ficha1, ficha2, desde1, desde2, hasta1)
-            elif not self.hayFicha(hasta1, ficha1.getFaccion()):
-                self.moverFicha(ficha1, desde1, hasta1)
-                self.nodos[self.dondeEsta(ficha2)].getFicha(ficha2).puedeMover = False
-            elif not self.hayFicha(hasta2, ficha2.getFaccion()):
-                self.moverFicha(ficha2, desde2, hasta2)
-                self.nodos[self.dondeEsta(ficha1)].getFicha(ficha1).puedeMover = False
-            else:
-                self.nodos[self.dondeEsta(ficha2)].getFicha(ficha2).puedeMover = False
-                self.nodos[self.dondeEsta(ficha1)].getFicha(ficha1).puedeMover = False
+            self.moverFichasDeLaMismaCasillaALaMismaCasilla(ficha1, ficha2, desde1, desde2, hasta1)
         else:
-            if not self.hayFicha(hasta1, ficha1.getFaccion()):
-                self.moverFicha(ficha1, desde1, hasta1)
-            if not self.hayFicha(hasta2, ficha2.getFaccion()):
-                self.moverFicha(ficha2, desde2, hasta2)
+            self.moverFicha(ficha1, desde1, hasta1)
+            self.moverFicha(ficha2, desde2, hasta2)
 
     # Dale Pablo titán fuersa bro
     # Aquí, Pablo, gracias jefe.
