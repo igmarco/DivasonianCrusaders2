@@ -88,7 +88,7 @@ class Nodo():
     def hayFicha(self):
         return self.fichaDefensora is not None
 
-    def hayDosFifhas(self):
+    def hayDosFichas(self):
         return self.fichaAtacante is not None
 
     def ejecutarCarga(self):

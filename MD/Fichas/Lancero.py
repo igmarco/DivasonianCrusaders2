@@ -5,7 +5,7 @@ from MD.Fichas.Ficha import Ficha
 
 class Lancero (Ficha):
 
-    def __init__(self, faccion, hachaDivasonica=None, dano=15, vida=125, vidaMaxima=125, danoVariable=5, danoACaballeria=35):
+    def __init__(self, faccion=0, hachaDivasonica=None, dano=15, vida=125, vidaMaxima=125, danoVariable=5, danoACaballeria=35):
         super().__init__(faccion, hachaDivasonica, dano, vida, vidaMaxima, danoVariable)
         self.danoACaballeria = danoACaballeria
 

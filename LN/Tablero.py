@@ -21,7 +21,7 @@ class Tablero:
         if nodos:
             self.nodos = nodos
         else:
-            self.nodos = Nodo() * 45
+            self.nodos = [Nodo() for i in range(45)]
             nodos[18], nodos[26] = Nodo(Copa(1)), Nodo(Copa(2))
             nodos[5], nodos[39] = Nodo(Colina()), Nodo(Colina())
             nodos[20], nodos[24] = Nodo(Catapulta(1)), Nodo(Catapulta(2))
@@ -50,7 +50,7 @@ class Tablero:
             freal = self.nodos[casillaO].quitarFicha(ficha)
             self.nodos[casillaDest].ponerFicha(freal)
             if self.nodos[casillaDest].hayDosFichas():
-                self.nodos[casillaDest].ejecutarCrga()
+                self.nodos[casillaDest].ejecutarCarga()
                 self.nodos[casillaDest].noPuedenMover()
 
     def moverDireccion(self, direccion, desde):
@@ -162,17 +162,17 @@ class Tablero:
             self.nodos[casO2].ejecutarAtaqueContraHuida(ficha2)
         if self.nodos[casO1].estaAqui(ficha1) and self.nodos[casO2].estaAqui(ficha2):
             freal1 = self.nodos[casO1].quitarFicha(ficha1)
-            freal2 = self.nodos[casO2].quitarFicha(ficha2);
-            self.nodos[dest].ponerFicha(freal1);
-            self.nodos[dest].ponerFicha(freal2);
-            self.nodos[dest].ejecutarCrgasRespectivas();
-            self.nodos[dest].noPuedenMover();
+            freal2 = self.nodos[casO2].quitarFicha(ficha2)
+            self.nodos[dest].ponerFicha(freal1)
+            self.nodos[dest].ponerFicha(freal2)
+            self.nodos[dest].ejecutarCargasRespectivas()
+            self.nodos[dest].noPuedenMover()
         elif self.nodos[casO1].estaAqui(ficha1):
             freal1 = self.nodos[casO1].quitarFicha(ficha1)
-            self.nodos[dest].ponerFicha(freal1);
+            self.nodos[dest].ponerFicha(freal1)
         elif self.nodos[casO2].estaAqui(ficha2):
             freal2 = self.nodos[casO2].quitarFicha(ficha2)
-            self.nodos[dest].ponerFicha(freal2);
+            self.nodos[dest].ponerFicha(freal2)
 
     def moverFichasDeLaMismaCasilla(self, ficha1, ficha2, casillaO, casillaDest1, casillaDest2):
         self.nodos[casillaO].ejecutarAtaquesDeHuidas()
@@ -180,13 +180,13 @@ class Tablero:
             freal1 = self.nodos[casillaO].quitarFicha(ficha1)
             self.nodos[casillaDest1].ponerFicha(freal1)
             if self.nodos[casillaDest1].hayDosFichas():
-                self.nodos[casillaDest1].ejecutarCrga()
+                self.nodos[casillaDest1].ejecutarCarga()
                 self.nodos[casillaDest1].noPuedenMover()
         if self.nodos[casillaO].estaAqui(ficha2):
             freal2 = self.nodos[casillaO].quitarFicha(ficha2)
             self.nodos[casillaDest2].ponerFicha(freal2)
             if self.nodos[casillaDest2].hayDosFichas():
-                self.nodos[casillaDest2].ejecutarCrga()
+                self.nodos[casillaDest2].ejecutarCarga()
                 self.nodos[casillaDest2].noPuedenMover()
 
 
@@ -202,28 +202,28 @@ class Tablero:
     def cruzarFichas(self, ficha1, ficha2, casillaO1, casillaO2):
         if  random.random() >= 0.5:
             self.moverFicha(ficha1, casillaO1, casillaO2)
-            self.nodos[casillaO2].ejecutarCrgasRespectivas()
+            self.nodos[casillaO2].ejecutarCargasRespectivas()
             self.nodos[casillaO2].noPuedenMover()
         else:
             self.moverFicha(ficha2, casillaO2, casillaO1)
-            self.nodos[casillaO1].ejecutarCrgasRespectivas()
+            self.nodos[casillaO1].ejecutarCargasRespectivas()
             self.nodos[casillaO1].noPuedenMover()
 
     def resolverTurno(self):
-        dondeDispara1 = self.dondeDispararFlecha(1)
-        dondeDispara2 = self.dondeDispararFlecha(2)
+        dondeDispara1 = self.dondeDispararFlechas(1)
+        dondeDispara2 = self.dondeDispararFlechas(2)
         for i, elem in enumerate(self.nodos):
             if i in dondeDispara1 and not elem.hayDosFichas() and elem.estaAqui(2):
-                elem.recibirDisparo(self.nodos[self.dondeEsta(Arquero(1))].getFichaDefensora().realizarDisparo())
+                elem.recibirDisparo(self.nodos[self.dondeEsta(Arquero(1))].fichaDefensora.realizarDisparo())
             if i in dondeDispara2 and not elem.hayDosFichas() and elem.estaAqui(1):
-                elem.recibirDisparo(self.nodos[self.dondeEsta(Arquero(2))].getFichaDefensora().realizarDisparo())
+                elem.recibirDisparo(self.nodos[self.dondeEsta(Arquero(2))].fichaDefensora.realizarDisparo())
             elem.resolverTurno()
 
     def haTerminado(self):
         posCopa1, posCopa2 = self.dondeEsta(Copa(1)), self.dondeEsta(Copa(2))
         algunoVivo1, algunoVivo2 = False, False
 
-        if self.nodos[posCopa1].getCasilla().estaMuerta() or self.nodos[posCopa2].getCasilla().estaMuerta():
+        if self.nodos[posCopa1].casilla.estaMuerta() or self.nodos[posCopa2].casilla.estaMuerta():
             return True
 
         for i in range(45):
@@ -241,9 +241,9 @@ class Tablero:
         perdedor1, perdedor2 = False, False
         algunoVivo1, algunoVivo2 = False, False
 
-        if self.nodos[posCopa1].getCasilla().estaMuerta():
+        if self.nodos[posCopa1].casilla.estaMuerta():
             perdedor1 = True
-        if self.nodos[posCopa2].getCasilla().estaMuerta():
+        if self.nodos[posCopa2].casilla.estaMuerta():
             perdedor2 = True
         for i in range(45):
             if self.nodos[i].estaAqui(1): algunoVivo1 = True
@@ -262,11 +262,11 @@ class Tablero:
             return  i if self.nodos[i].estaAqui(ficha) else -1
 
     def dispararProyectiles(self, catapulta, x, y, ficha):
-        catPos = self.nodos[self.dondeEsta(catapulta)]
+        cat = self.nodos[self.dondeEsta(catapulta)]
         casillaObjectivo = (4-y)*9 + x
-        if ficha and ficha == self.nodos[catPos].getFichaDefensora() and not self.nodos[catPos].hayDosFichas():
+        if ficha and ficha == cat.fichaDefensora and not cat.hayDosFichas():
             self.nodos[casillaObjectivo].recibirDisparo(catapulta.realizarDisparo())
-            self.nodos[casillaObjectivo].carProyectil()
+            self.nodos[casillaObjectivo].cayoProyectil = True
 
     def hayFicha(self, casilla, faccion = None):
         return self.nodos[casilla].hayFicha(faccion) if faccion else self.nodos[casilla].hayFicha()

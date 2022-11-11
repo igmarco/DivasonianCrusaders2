@@ -5,7 +5,7 @@ from MD.Casillas.Casilla import Casilla
 
 class Curacion(Casilla):
 
-    def __init__(self, hachaDivasonica, curacion=10, curacionVariable=5, identificador=0):
+    def __init__(self, identificador=0, hachaDivasonica=None, curacion=10, curacionVariable=5):
         super().__init__(hachaDivasonica, False, None)
         self.curacion = curacion
         self.curacionVariable = curacionVariable

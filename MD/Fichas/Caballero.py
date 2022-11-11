@@ -5,7 +5,7 @@ from MD.Fichas.Ficha import Ficha
 
 class Caballero (Ficha):
 
-    def __init__(self, faccion, hachaDivasonica=None, dano=20, vida=100, vidaMaxima=100, danoVariable=10, danoCarga=30):
+    def __init__(self, faccion=0, hachaDivasonica=None, dano=20, vida=100, vidaMaxima=100, danoVariable=10, danoCarga=30):
         super().__init__(faccion, hachaDivasonica, dano, vida, vidaMaxima, danoVariable)
         self.danoCarga = danoCarga
 

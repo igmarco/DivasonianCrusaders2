@@ -25,27 +25,30 @@ def iniciar(tablero):
     canvas.fill(WHITE)
     font = pygame.font.SysFont("comicsansms", TAMAÑO_LETRA)  # Para el tipo de letra
 
-    arqueroAzul = pygame.image.load("ArqueroAzulC.png")
-    barbaroAzul = pygame.image.load("BarbaroAzulC.png")
-    caballeroAzul = pygame.image.load("CaballeroAzulC.png")
-    guerreroAzul = pygame.image.load("GuerreroAzulC.png")
-    lanceroAzul = pygame.image.load("LanceroAzulC.png")
+    arqueroAzul = pygame.image.load("Imagenes/ArqueroAzulC.png")
+    barbaroAzul = pygame.image.load("Imagenes/BarbaroAzulC.png")
+    caballeroAzul = pygame.image.load("Imagenes/CaballeroAzulC.png")
+    guerreroAzul = pygame.image.load("Imagenes/GuerreroAzulC.png")
+    lanceroAzul = pygame.image.load("Imagenes/LanceroAzulC.png")
 
-    arqueroRojo = pygame.image.load("ArqueroRojoC.png")
-    barbaroRojo = pygame.image.load("BarbaroRojoC.png")
-    caballeroRojo = pygame.image.load("CaballeroRojoC.png")
-    guerreroRojo = pygame.image.load("GuerreroRojoC.png")
-    lanceroRojo = pygame.image.load("LanceroRojoC.png")
+    arqueroRojo = pygame.image.load("Imagenes/ArqueroRojoC.png")
+    barbaroRojo = pygame.image.load("Imagenes/BarbaroRojoC.png")
+    caballeroRojo = pygame.image.load("Imagenes/CaballeroRojoC.png")
+    guerreroRojo = pygame.image.load("Imagenes/GuerreroRojoC.png")
+    lanceroRojo = pygame.image.load("Imagenes/LanceroRojoC.png")
 
-    catapultaAzul = pygame.image.load("CatapultaAzulC.png")
-    catapultaRoja = pygame.image.load("CatapultaRojaC.png")
+    catapultaAzul = pygame.image.load("Imagenes/CatapultaAzulC.png")
+    coronaAzul = pygame.image.load("Imagenes/CoronaAzulC.png")
 
-    coronaAzul = pygame.image.load("CoronaAzulC.png")
-    coronaRoja = pygame.image.load("CoronaRojaC.png")
+    catapultaRoja = pygame.image.load("Imagenes/CatapultaRojaC.png")
+    coronaRoja = pygame.image.load("Imagenes/CoronaRojaC.png")
 
-    hacha = pygame.image.load("HachaDivasonia.png")
+    hacha = pygame.image.load("Imagenes/HachaDivasonia.png")
+    curarse = pygame.image.load("Imagenes/CurarseC.png")
+    colina = pygame.image.load("Imagenes/ColinaC.png")
+    fondo = pygame.image.load("Imagenes/fondo.png")
 
-    iconoRefachero = pygame.image.load("iconoRefachero2.png")
+    iconoRefachero = pygame.image.load("Imagenes/iconoRefachero2.png")
 
     arqueroAzul.convert()
     barbaroAzul.convert()
@@ -90,30 +93,30 @@ def iniciar(tablero):
     return canvas
 
 def pintar(canvas, tablero):
-    arqueroAzul = pygame.image.load("ArqueroAzulC.png")
-    barbaroAzul = pygame.image.load("BarbaroAzulC.png")
-    caballeroAzul = pygame.image.load("CaballeroAzulC.png")
-    guerreroAzul = pygame.image.load("GuerreroAzulC.png")
-    lanceroAzul = pygame.image.load("LanceroAzulC.png")
+    arqueroAzul = pygame.image.load("Imagenes/ArqueroAzulC.png")
+    barbaroAzul = pygame.image.load("Imagenes/BarbaroAzulC.png")
+    caballeroAzul = pygame.image.load("Imagenes/CaballeroAzulC.png")
+    guerreroAzul = pygame.image.load("Imagenes/GuerreroAzulC.png")
+    lanceroAzul = pygame.image.load("Imagenes/LanceroAzulC.png")
 
-    arqueroRojo = pygame.image.load("ArqueroRojoC.png")
-    barbaroRojo = pygame.image.load("BarbaroRojoC.png")
-    caballeroRojo = pygame.image.load("CaballeroRojoC.png")
-    guerreroRojo = pygame.image.load("GuerreroRojoC.png")
-    lanceroRojo = pygame.image.load("LanceroRojoC.png")
+    arqueroRojo = pygame.image.load("Imagenes/ArqueroRojoC.png")
+    barbaroRojo = pygame.image.load("Imagenes/BarbaroRojoC.png")
+    caballeroRojo = pygame.image.load("Imagenes/CaballeroRojoC.png")
+    guerreroRojo = pygame.image.load("Imagenes/GuerreroRojoC.png")
+    lanceroRojo = pygame.image.load("Imagenes/LanceroRojoC.png")
 
-    catapultaAzul = pygame.image.load("CatapultaAzulC.png")
-    coronaAzul = pygame.image.load("CoronaAzulC.png")
+    catapultaAzul = pygame.image.load("Imagenes/CatapultaAzulC.png")
+    coronaAzul = pygame.image.load("Imagenes/CoronaAzulC.png")
 
-    catapultaRoja = pygame.image.load("CatapultaRojaC.png")
-    coronaRoja = pygame.image.load("CoronaRojaC.png")
+    catapultaRoja = pygame.image.load("Imagenes/CatapultaRojaC.png")
+    coronaRoja = pygame.image.load("Imagenes/CoronaRojaC.png")
 
-    hacha = pygame.image.load("HachaDivasonia.png")
-    curarse = pygame.image.load("CurarseC.png")
-    colina = pygame.image.load("ColinaC.png")
-    fondo = pygame.image.load("fondo.png")
+    hacha = pygame.image.load("Imagenes/HachaDivasonia.png")
+    curarse = pygame.image.load("Imagenes/CurarseC.png")
+    colina = pygame.image.load("Imagenes/ColinaC.png")
+    fondo = pygame.image.load("Imagenes/fondo.png")
 
-    iconoRefachero = pygame.image.load("iconoRefachero2.png")
+    iconoRefachero = pygame.image.load("Imagenes/iconoRefachero2.png")
 
     for pos, nodo in tablero.nodos:
         x,y = pos%9+1, 4-pos//9+1
@@ -157,3 +160,7 @@ def pintar(canvas, tablero):
             canvas.blit(hacha, (x * (TAMAÑO_CELDA + TAMAÑO_BORDE), y * (TAMAÑO_CELDA + TAMAÑO_BORDE)))
 
         pygame.display.update()
+
+tablero = Tablero()
+canvas = iniciar(tablero)
+pintar(canvas, tablero)

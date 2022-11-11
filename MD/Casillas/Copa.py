@@ -2,7 +2,7 @@ from MD.Casillas.Casilla import Casilla
 
 class Copa(Casilla):
 
-    def __init__(self, hachaDivasonica, faccion=0, vida=5):
+    def __init__(self, faccion=0, hachaDivasonica=None, vida=5):
         super().__init__(hachaDivasonica, False, None)
         self.faccion = faccion
         self.vida = vida
