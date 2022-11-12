@@ -4,8 +4,8 @@ import math as m
 class Casilla ():
 
     def __init__(self,hachaDivasonica=None, casillaDeCuracion=False, curacionAuxiliar=None):
-        self.hachaDivasonica = hachaDivasonica;
-        if casillaDeCura:
+        self.hachaDivasonica = hachaDivasonica
+        if casillaDeCuracion:
             self.curacionAuxiliar = 5
         elif curacionAuxiliar is not None:
             self.curacionAuxiliar = curacionAuxiliar
@@ -28,4 +28,5 @@ class Casilla ():
             return type(self).__name__
 
     def copy(self):
-        return Casilla(self.hachaDivasonica.copy(), self.casillaDeCuracion, self.curacionAuxiliar)
+        hacha = self.hachaDivasonica.copy() if self.hachaDivasonica else None
+        return Casilla(hacha, self.casillaDeCuracion, self.curacionAuxiliar)

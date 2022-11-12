@@ -6,4 +6,5 @@ class Normal(Casilla):
         super().__init__(hachaDivasonica, casillaDeCuracion, curacionAuxiliar)
 
     def copy(self):
-        return Normal(self.hachaDivasonica.copy(), self.casillaDeCuracion, self.curacionAuxiliar)
+        hacha = self.hachaDivasonica.copy() if self.hachaDivasonica else None
+        return Normal(hacha, curacionAuxiliar=self.curacionAuxiliar)

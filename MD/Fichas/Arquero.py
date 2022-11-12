@@ -14,4 +14,5 @@ class Arquero (Ficha):
         return self.danoFlechas + m.floor(np.random.rand()*2*self.danoFlechasVariable - self.danoFlechasVariable)
 
     def copy(self):
-        return Arquero(self.faccion, self.hachaDivasonica.copy(), self.dano, self.vida, self.vidaMaxima, self.danoVariable, self.danoFlechas, self.danoflechasvariable)
+        hacha = self.hachaDivasonica.copy() if self.hachaDivasonica else None
+        return Arquero(self.faccion, hacha, self.dano, self.vida, self.vidaMaxima, self.danoVariable, self.danoFlechas, self.danoFlechasVariable)

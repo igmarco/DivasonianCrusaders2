@@ -10,8 +10,8 @@ Direccion = {
 }
 
 Faccion = {
-    1:'Faccion1',
-    2:'Faccion2',
+    1:'Faccion 1',
+    2:'Faccion 2',
     0:'Ambos'
 }
 

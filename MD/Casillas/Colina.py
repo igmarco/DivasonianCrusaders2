@@ -7,4 +7,5 @@ class Colina(Casilla):
         self.danoExtra = danoExtra
 
     def copy(self):
-        return Colina(self.hachaDivasonica.copy(), self.curacionAuxiliar, self.danoExtra)
+        hacha = self.hachaDivasonica.copy() if self.hachaDivasonica else None
+        return Colina(hacha, self.curacionAuxiliar, self.danoExtra)

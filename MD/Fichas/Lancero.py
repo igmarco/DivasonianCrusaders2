@@ -14,4 +14,5 @@ class Lancero (Ficha):
         return self.danoACaballeria + m.floor(np.random.rand() * 2 * self.danoVariable - self.danoVariable) + hd if type(ficha).__name__ == 'Caballero' else self.dano + m.floor(np.random.rand() * 2 * self.danoVariable - self.danoVariable) + hd
 
     def copy(self):
-        return Lancero(self.faccion, self.hachaDivasonica.copy(), self.dano, self.vida, self.vidaMaxima, self.danoVariable, self.danoACaballeria)
+        hacha = self.hachaDivasonica.copy() if self.hachaDivasonica else None
+        return Lancero(self.faccion, hacha, self.dano, self.vida, self.vidaMaxima, self.danoVariable, self.danoACaballeria)

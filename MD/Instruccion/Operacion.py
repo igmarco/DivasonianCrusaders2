@@ -9,6 +9,7 @@ class Operacion:
 class Movimiento(Operacion):
 
     def __init__(self, ficha, direccion):
+        self.ficha = ficha
         self.direccion = direccion
 
     def __str__(self):
@@ -16,8 +17,8 @@ class Movimiento(Operacion):
 
 class Disparo(Operacion):
 
-    def __init__(self, ficha, catapulta, posTablero=None, x=None, y=None):
-        self.catapulta = catapulta
+    def __init__(self, ficha, posTablero=None, x=None, y=None):
+        self.ficha = ficha
         self.posTablero = posTablero
         if x is None and y is None:
             self.x, self.y = posTablero%9, 4-posTablero//9

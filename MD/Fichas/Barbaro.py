@@ -6,4 +6,5 @@ class Barbaro (Ficha):
         super().__init__(faccion, hachaDivasonica, dano, vida, vidaMaxima, danoVariable)
 
     def copy(self):
-        return Barbaro(self.faccion, self.hachaDivasonica.copy(), self.dano, self.vida, self.vidaMaxima, self.danoVariable)
+        hacha = self.hachaDivasonica.copy() if self.hachaDivasonica else None
+        return Barbaro(self.faccion, hacha, self.dano, self.vida, self.vidaMaxima, self.danoVariable)

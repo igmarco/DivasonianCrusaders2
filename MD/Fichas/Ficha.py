@@ -39,7 +39,7 @@ class Ficha:
         self.vida = self.vida + v if self.vida + v < self.vidaMaxima else self.vidaMaxima
 
     def __eq__(self,ficha):
-        return ficha is not None and ficha.faccion == self.faccion and type(ficha) == type(self)
+        return ficha is not None and type(ficha) == type(self) and ficha.faccion == self.faccion
 
     def realizarCarga(self, ficha):
         return m.floor(self.realizarAtaque(ficha)*1.2)
@@ -52,9 +52,10 @@ class Ficha:
 
     def __str__(self):
         if self.hachaDivasonica is not None:
-            return type(self).__name__ + Faccion[self.faccion] + ', ' + self.vida + 'ps' + ' con Hacha'
+            return type(self).__name__ + ', ' + Faccion[self.faccion] + ', ' + str(self.vida) + 'ps' + ' con Hacha'
         else:
-            return type(self).__name__ + Faccion[self.faccion] + ', ' + self.vida + 'ps'
+            return type(self).__name__ + ', ' + Faccion[self.faccion] + ', ' + str(self.vida) + 'ps'
 
     def copy(self):
-        return Ficha(self.faccion, self.hachaDivasonica.copy(), self.dano, self.vida, self.vidaMaxima, self.danoVariable)
+        hacha = self.hachaDivasonica.copy() if self.hachaDivasonica else None
+        return Ficha(self.faccion, hacha, self.dano, self.vida, self.vidaMaxima, self.danoVariable)

@@ -8,12 +8,22 @@ class Nodo():
         self.fichaAtacante=fichaAtacante
         self.cayoProyectil=cayoProyectil
 
+    def __str__(self):
+        string = str(self.casilla)
+        if self.fichaDefensora is not None:
+            string += ': ' + str(self.fichaDefensora)
+            if self.fichaAtacante is not None:
+                string += ' VS. ' + str(self.fichaAtacante)
+        if self.cayoProyectil:
+            string += ' con proyectil'
+        return string
+
     def estaAqui(self,fichaOCasillaOFaccion):
         if fichaOCasillaOFaccion is None:
             return False
-        elif fichaOCasillaOFaccion.equals(self.casilla) or fichaOCasillaOFaccion.equals(self.fichaDefensora) or \
-                fichaOCasillaOFaccion.equals(self.fichaAtacante) or fichaOCasillaOFaccion==self.fichaDefensora.faccion \
-                or fichaOCasillaOFaccion == self.fichaAtacante.faccion:
+        elif fichaOCasillaOFaccion == self.casilla or fichaOCasillaOFaccion == self.fichaDefensora or \
+                fichaOCasillaOFaccion == self.fichaAtacante or (self.fichaDefensora and fichaOCasillaOFaccion == self.fichaDefensora.faccion) \
+                or (self.fichaAtacante and fichaOCasillaOFaccion == self.fichaAtacante.faccion):
             return True
 
     def ponerFicha(self,ficha):
@@ -26,11 +36,11 @@ class Nodo():
         if ficha is None:
             return None
         freturn = None
-        if self.fichaDefensora.equals(ficha):
+        if self.fichaDefensora == ficha:
             freturn = self.fichaDefensora
             self.fichaDefensora = self.fichaAtacante
             self.fichaAtacante = None
-        elif self.fichaAtacante.equals(ficha):
+        elif self.fichaAtacante == ficha:
             freturn = self.fichaAtacante
             if self.fichaAtacante is not None:
                 self.fichaDefensora.sufrirDano(self.fichaAtacante.realizarAtaque(self.fichaDefensora))
@@ -85,8 +95,11 @@ class Nodo():
 
         self.comprobarMuertes()
 
-    def hayFicha(self):
-        return self.fichaDefensora is not None
+    def hayFicha(self, faccion=None):
+        if faccion:
+            return self.fichaDefensora.faccion == faccion or self.fichaAtacante.faccion == faccion
+        else:
+            return self.fichaDefensora is not None
 
     def hayDosFichas(self):
         return self.fichaAtacante is not None
@@ -94,8 +107,8 @@ class Nodo():
     def ejecutarCarga(self):
         self.fichaDefensora.sufrirDano(self.fichaAtacante.realizarCarga(self.fichaDefensora))
 
-        if type(self.casilla).__none__ == 'Colina':
-            self.fichaAtacante.sufrirDano((self.fichaDefensora.realizarAtaque(self.fichaAtacante)) + self.casilla.getDanoExtra())
+        if type(self.casilla).__name__ == 'Colina':
+            self.fichaAtacante.sufrirDano((self.fichaDefensora.realizarAtaque(self.fichaAtacante)) + self.casilla.danoExtra)
         else:
             self.fichaAtacante.sufrirDano(self.fichaDefensora.realizarAtaque(self.fichaAtacante))
 
@@ -115,7 +128,7 @@ class Nodo():
                 self.fichaAtacante.sufrirDano(self.fichaDefensora.realizarAtaqueContraHuida(self.fichaAtacante))
 
     def ejecutarAtaquesDeHuidas(self):
-        if self.hayDosFifhas():
+        if self.hayDosFichas():
             self.fichaDefensora.sufrirDano(self.fichaAtacante.realizarCarga(self.fichaDefensora))
             self.fichaAtacante.sufrirDano(self.fichaDefensora.realizarCarga(self.fichaAtacante))
 
@@ -158,4 +171,7 @@ class Nodo():
             return self.fichaAtacante.puedeMover
 
     def copy(self):
-        return Nodo(self.casilla.copy(), self.fichaDefensora.copy(), self.fichaAtacante.copy(), self.cayoProyectil)
+        casilla = self.casilla.copy() if self.casilla else None
+        fichaDefensora = self.fichaDefensora.copy() if self.fichaDefensora else None
+        fichaAtacante = self.fichaAtacante.copy() if self.fichaAtacante else None
+        return Nodo(casilla, fichaDefensora, fichaAtacante, self.cayoProyectil)
