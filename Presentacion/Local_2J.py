@@ -12,7 +12,6 @@ from Presentacion.Pintador import *
 
 def Local_2J(nombre1, nombre2):
     rendicion1, rendicion2 = False, False
-    turno = 0
     partida = Partida()
     pintador = iniciarPintador(partida.tableroActual)
 
@@ -58,7 +57,7 @@ def Local_2J(nombre1, nombre2):
     if partida.tableroActual.getGanador() == 1:
         print('Enhorabuena, ha ganado', nombre1, 'en el turno', partida.turno)
     if partida.tableroActual.getGanador() == 2:
-        print('Enhorabuena, ha ganado', nombre1, 'en el turno', partida.turno)
+        print('Enhorabuena, ha ganado', nombre2, 'en el turno', partida.turno)
     elif partida.tableroActual.getGanador() == 0:
         print('Nada mal,', nombre1, 'y', nombre2, ', ha habido un empate en el turno', partida.turno)
 
