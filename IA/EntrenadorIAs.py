@@ -1,19 +1,16 @@
 import sys
-from datetime import datetime
 import os
+import time
+from datetime import datetime
 
 import numpy as np
 
-from IA.Node import Node, fromJSON, code
+from IA.Node import Node, fromJSON, code, decode
 from LN.Partida import Partida
 from MD.Casillas.Catapulta import Catapulta
-from MD.Fichas.Arquero import Arquero
-from MD.Fichas.Barbaro import Barbaro
-from MD.Fichas.Caballero import Caballero
-from MD.Fichas.Guerrero import Guerrero
-from MD.Fichas.Lancero import Lancero
 from MD.Instruccion.Operacion import Movimiento, Disparo
 from Presentacion.Pintador import *
+from Utilidades.Utilidades import Direccion
 
 epsilon = 0.5
 
@@ -59,30 +56,59 @@ def entrenarIAs(nombre1, nombre2, partidas=100):
         entrenar(IA1, IA2, nombre1, nombre2, partidas)
 
 def entrenar(IA1, IA2, nombre1, nombre2, partidas):
+    nodoraiz1 = IA1
+    nodoraiz2 = IA2
     for i in range(partidas):
         partida = Partida()
         pintador = iniciarPintador(partida.tableroActual)
 
-        print('Tablero del turno', partida.turno)
-        print(partida.tableroActual)
+        IA1 = nodoraiz1
+        IA2 = nodoraiz2
+
+        print('Partida', i)
+
+        # print('Tablero del turno', partida.turno)
+        # print(partida.tableroActual)
         pintar(pintador, partida.tableroActual)
 
         while not partida.haTerminado:
             instruccion1, instruccion2 = elegirInstrucciones(IA1, IA2, partida)
-            IA1 = IA1.get(instruccion1.code())
-            IA2 = IA2.get(instruccion2.code())
 
+            if code(instruccion1) in IA1.hijos:
+                IA1 = IA1.get(code(instruccion1))
+            else:
+                IA1.insert(instruccion1,0,0)
+                IA1 = IA1.get(code(instruccion1))
+            if code(instruccion2) in IA2.hijos:
+                IA2 = IA2.get(code(instruccion2))
+            else:
+                IA2.insert(instruccion2,0,0)
+                IA2 = IA2.get(code(instruccion2))
+
+            if code(instruccion2) in IA1.hijos:
+                IA1 = IA1.get(code(instruccion2))
+            else:
+                IA1.insert(instruccion2, 0, 0)
+                IA1 = IA1.get(code(instruccion2))
+            if code(instruccion1) in IA2.hijos:
+                IA2 = IA2.get(code(instruccion1))
+            else:
+                IA2.insert(instruccion1, 0, 0)
+                IA2 = IA2.get(code(instruccion1))
+
+
+            # print(code(instruccion1))
+            # print(code(instruccion2))
             partida.ejecutarTurno(instruccion1, instruccion2)
 
-            # for ind, tablero in enumerate(partida.tablerosMovimientos):
-            #     print('Tablero',ind, 'del turno', partida.turno)
-            #     print(tablero)
-            #
-            #     time.sleep(2)
-            #     pintar(pintador, tablero)
+            for ind, tablero in enumerate(partida.tablerosMovimientos):
+                # print('Tablero',ind, 'del turno', partida.turno)
+                # print(tablero)
+                # time.sleep(0.01)
+                pintar(pintador, tablero)
 
-            print('Tablero final del turno', partida.turno)
-            print(partida.tableroActual)
+            # print('Tablero final del turno', partida.turno)
+            # print(partida.tableroActual)
             pintar(pintador, partida.tableroActual)
 
         if partida.tableroActual.getGanador() == 1:
@@ -127,6 +153,9 @@ def entrenar(IA1, IA2, nombre1, nombre2, partidas):
                 nodoBP.wins = nodoBP.wins + 0
                 nodoBP = nodoBP.padre
 
+    guardarIA(nombre1, nodoraiz1)
+    guardarIA(nombre2, nodoraiz2)
+
     while (True):  # Esperar para cerrar la pantalla
         pygame.event.pump()
         for event in pygame.event.get():
@@ -139,39 +168,46 @@ def generarInstruccionAleatoria(tablero, faccion):
     instrElegida = []
     for i in range(6):
         fichasCatapulta = []
-        if tablero[tablero.dondeEsta(Catapulta(1))].hayFicha(faccion):
-            if tablero[tablero.dondeEsta(Catapulta(1))].fichaDefensora.faccion == faccion:
-                fichasCatapulta.append(tablero[tablero.dondeEsta(Catapulta(1))].fichaDefensora)
+        if tablero.nodos[tablero.dondeEsta(Catapulta(1))].hayFicha(faccion):
+            if tablero.nodos[tablero.dondeEsta(Catapulta(1))].fichaDefensora.faccion == faccion:
+                fichasCatapulta.append(tablero.nodos[tablero.dondeEsta(Catapulta(1))].fichaDefensora)
             else:
-                fichasCatapulta.append(tablero[tablero.dondeEsta(Catapulta(1))].fichaAtacante)
-        if tablero[tablero.dondeEsta(Catapulta(2))].hayFicha(faccion):
-            if tablero[tablero.dondeEsta(Catapulta(2))].fichaDefensora.faccion == faccion:
-                fichasCatapulta.append(tablero[tablero.dondeEsta(Catapulta(2))].fichaDefensora)
+                fichasCatapulta.append(tablero.nodos[tablero.dondeEsta(Catapulta(1))].fichaAtacante)
+        if tablero.nodos[tablero.dondeEsta(Catapulta(2))].hayFicha(faccion):
+            if tablero.nodos[tablero.dondeEsta(Catapulta(2))].fichaDefensora.faccion == faccion:
+                fichasCatapulta.append(tablero.nodos[tablero.dondeEsta(Catapulta(2))].fichaDefensora)
             else:
-                fichasCatapulta.append(tablero[tablero.dondeEsta(Catapulta(2))].fichaAtacante)
+                fichasCatapulta.append(tablero.nodos[tablero.dondeEsta(Catapulta(2))].fichaAtacante)
         if len(fichasCatapulta) > 0 and np.random.rand() > 0.8:
             if len(fichasCatapulta) == 2 and np.random.rand() > 0.5:
                 listaPosTablero = tablero.dondeDispararProyectiles(
-                    tablero[tablero.dondeEsta(fichasCatapulta[1])].casilla)
-                posTablero = listaPosTablero[np.random.randint(0, len(listaPosTablero))]
+                    tablero.nodos[tablero.dondeEsta(fichasCatapulta[1])].casilla)
+                posTablero = listaPosTablero[np.random.randint(len(listaPosTablero))]
                 instrElegida.append(Disparo(fichasCatapulta[1], posTablero))
             else:
                 listaPosTablero = tablero.dondeDispararProyectiles(
-                    tablero[tablero.dondeEsta(fichasCatapulta[0])].casilla)
-                posTablero = listaPosTablero[np.random.randint(0, len(listaPosTablero))]
+                    tablero.nodos[tablero.dondeEsta(fichasCatapulta[0])].casilla)
+                posTablero = listaPosTablero[np.random.randint(len(listaPosTablero))]
                 instrElegida.append(Disparo(fichasCatapulta[0], posTablero))
         else:
             if np.random.rand() > 0.5:
                 listaFichasVivas = []
                 for nodo in tablero.nodos:
-                    if nodo.fichaDefensora.faccion == faccion and nodo.fichaDefensora.puedeMover:
+                    if nodo.fichaDefensora is not None and nodo.fichaDefensora.faccion == faccion and nodo.fichaDefensora.puedeMover:
                         listaFichasVivas.append(nodo.fichaDefensora)
-                    elif nodo.fichaAtacante.faccion == faccion and nodo.fichaAtacante.puedeMover:
+                    elif nodo.fichaAtacante is not None and nodo.fichaAtacante.faccion == faccion and nodo.fichaAtacante.puedeMover:
                         listaFichasVivas.append(nodo.fichaAtacante)
-                fichaElegida = listaFichasVivas[np.random.randint(0, len(listaFichasVivas))]
-                listaPosTablero = tablero.dondePuedeMover(fichaElegida)
-                posTablero = listaPosTablero[np.random.randint(0, len(listaPosTablero))]
-                instrElegida.append(Movimiento(fichaElegida, posTablero))
+                if len(listaFichasVivas) == 0:
+                    instrElegida.append(None)
+                else:
+                    fichaElegida = listaFichasVivas[np.random.randint(len(listaFichasVivas))]
+                    listaPosTablero = tablero.dondePuedeMover(fichaElegida)
+                    if len(listaPosTablero) == 0:
+                        instrElegida.append(None)
+                    else:
+                        posTablero = listaPosTablero[np.random.randint(len(listaPosTablero))]
+                        instrElegida.append(Movimiento(fichaElegida, Direccion[posTablero-tablero.dondeEsta(fichaElegida)]))
+                        tablero.moverFichaDireccion(fichaElegida, Direccion[posTablero-tablero.dondeEsta(fichaElegida)])
             else:
                 instrElegida.append(None)
 
@@ -187,15 +223,15 @@ def elegirInstrucciones(IA1, IA2, partida):
         instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 1)
     else:
         instrMejores = []
-        mejorInstr = IA1.hijos[0]
+        mejorInstr = list(IA1.hijos.keys())[0]
         for instr in IA1.hijos:
-            if IA1.getPuntuacion(mejorInstr,epsilon) < IA1.getPuntuacion(instr,epsilon):
+            if IA1.puntuacion(mejorInstr,epsilon) < IA1.puntuacion(instr,epsilon):
                 mejorInstr = instr
-        if IA1.getPuntuacion(mejorInstr, epsilon) > 0:
+        if IA1.puntuacion(mejorInstr, epsilon) > 0:
             for instr in IA1.hijos:
-                if IA1.getPuntuacion(mejorInstr, epsilon) == IA1.getPuntuacion(instr, epsilon):
+                if IA1.puntuacion(mejorInstr, epsilon) == IA1.puntuacion(instr, epsilon):
                     instrMejores.append(instr)
-            instruccion1 = instrMejores[np.random.randint(0, len(instrMejores))]
+            instruccion1 = decode(instrMejores[np.random.randint(len(instrMejores))])
         else:
             existe = True
             while existe:
@@ -207,15 +243,15 @@ def elegirInstrucciones(IA1, IA2, partida):
         instruccion2 = generarInstruccionAleatoria(tableroPrueba2, 2)
     else:
         instrMejores = []
-        mejorInstr = IA2.hijos[0]
+        mejorInstr = list(IA2.hijos.keys())[0]
         for instr in IA2.hijos:
-            if IA2.getPuntuacion(mejorInstr,epsilon) < IA2.getPuntuacion(instr,epsilon):
+            if IA2.puntuacion(mejorInstr,epsilon) < IA2.puntuacion(instr,epsilon):
                 mejorInstr = instr
-        if IA2.getPuntuacion(mejorInstr, epsilon) > 0:
+        if IA2.puntuacion(mejorInstr, epsilon) > 0:
             for instr in IA2.hijos:
-                if IA2.getPuntuacion(mejorInstr, epsilon) == IA2.getPuntuacion(instr, epsilon):
+                if IA2.puntuacion(mejorInstr, epsilon) == IA2.puntuacion(instr, epsilon):
                     instrMejores.append(instr)
-            instruccion2 = instrMejores[np.random.randint(0, len(instrMejores))]
+            instruccion2 = decode(instrMejores[np.random.randint(0, len(instrMejores))])
         else:
             existe = True
             while existe:
@@ -224,3 +260,10 @@ def elegirInstrucciones(IA1, IA2, partida):
                     existe = False
 
     return instruccion1, instruccion2
+
+# IA1 = Node(0,0)
+# IA2 = Node(0,0)
+# guardarIA('Divasonianos', IA1)
+# guardarIA('Romerianos', IA2)
+
+entrenarIAs('Divasonianos', 'Romerianos', 2)

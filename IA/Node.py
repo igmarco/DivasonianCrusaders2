@@ -23,7 +23,8 @@ def decode(strinstruccion):
         if op == 'E':
             instruccion.append(None)
         else:
-            instruccion.append(decode(op))
+            instruccion.append(decodeOP(op))
+    return instruccion
 
 class Node:
 
@@ -40,7 +41,7 @@ class Node:
         self.ultimo = False
 
     def get(self, instruccion):
-        return self.hijos[code(instruccion)]
+        return self.hijos[instruccion]
 
     def getAll(self):
         return self.hijos
@@ -62,7 +63,6 @@ class Node:
 
 
     def puntuacion(self, instruccion, epsilon):
-        instruccion = code(instruccion)
         if self.get(instruccion) == None:
             return 0
         else:

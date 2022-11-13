@@ -102,7 +102,7 @@ class Nodo():
 
     def hayFicha(self, faccion=None):
         if faccion:
-            return self.fichaDefensora.faccion == faccion or self.fichaAtacante.faccion == faccion
+            return (self.fichaDefensora is not None and self.fichaDefensora.faccion == faccion) or (self.fichaAtacante is not None and self.fichaAtacante.faccion == faccion)
         else:
             return self.fichaDefensora is not None
 
@@ -120,6 +120,8 @@ class Nodo():
         self.comprobarMuertes()
 
     def ejecutarCargasRespectivas(self):
+
+
         self.fichaDefensora.sufrirDano(self.fichaAtacante.realizarAtaqueContraHuida(self.fichaDefensora))
         self.fichaAtacante.sufrirDano(self.fichaDefensora.realizarAtaqueContraHuida(self.fichaAtacante))
 

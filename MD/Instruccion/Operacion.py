@@ -46,7 +46,7 @@ class Disparo(Operacion):
     def code(self):
         return self.ficha.code() + ' D' + ' ' + str(self.posTablero)
 
-def decode(string):
+def decodeOP(string):
     if string == '':
         return None
     strSplitted = string.split(' ')

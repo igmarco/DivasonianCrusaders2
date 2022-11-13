@@ -11,6 +11,8 @@ class Catapulta(Casilla):
         self.danoProyectilesVariable = danoProyectilesVariable
         self.identificador = identificador
 
+        self.disparo = False
+
     def realizarDisparo(self):
         return self.danoProyectiles + m.floor(np.random.rand() * 2 * self.danoProyectilesVariable - self.danoProyectilesVariable)
 

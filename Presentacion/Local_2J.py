@@ -144,4 +144,4 @@ def procesarComandos(partida, comando1, comando2):
 
     return instruccion1, instruccion2
 
-# Local_2J('Jugador 1', 'Jugador 2')
+Local_2J('Jugador 1', 'Jugador 2')

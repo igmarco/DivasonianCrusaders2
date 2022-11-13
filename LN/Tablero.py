@@ -12,8 +12,6 @@ from MD.Fichas.Lancero import Lancero
 from MD.Nodo.Nodo import Nodo
 import random
 
-from Utilidades.Utilidades import Direccion
-
 
 class Tablero:
 
@@ -111,10 +109,9 @@ class Tablero:
     # Dale Pablo titán fuersa bro
     # Aquí, Pablo, gracias jefe.
 
-    def moverFichasALaMismaCasilla(self, ficha1, ficha2,casO1, casO2, dest):
+    def moverFichasALaMismaCasilla(self, ficha1, ficha2, casO1, casO2, dest):
         if self.nodos[casO1].hayDosFichas():
             self.nodos[casO1].ejecutarAtaqueContraHuida(ficha1)
-            self.nodos[casO2].ejecutarAtaqueContraHuida(ficha2)
         if self.nodos[casO2].hayDosFichas():
             self.nodos[casO2].ejecutarAtaqueContraHuida(ficha2)
         if self.nodos[casO1].estaAqui(ficha1) and self.nodos[casO2].estaAqui(ficha2):
@@ -158,22 +155,36 @@ class Tablero:
 
     def cruzarFichas(self, ficha1, ficha2, casillaO1, casillaO2):
         if  random.random() >= 0.5:
-            self.moverFicha(ficha1, casillaO1, casillaO2)
+            # self.moverFicha(ficha1, casillaO1, casillaO2)
+            freal = self.nodos[casillaO1].quitarFicha(ficha1)
+            self.nodos[casillaO2].ponerFicha(freal)
             self.nodos[casillaO2].ejecutarCargasRespectivas()
             self.nodos[casillaO2].noPuedenMover()
         else:
-            self.moverFicha(ficha2, casillaO2, casillaO1)
+            # self.moverFicha(ficha2, casillaO2, casillaO1)
+            freal = self.nodos[casillaO2].quitarFicha(ficha2)
+            self.nodos[casillaO1].ponerFicha(freal)
             self.nodos[casillaO1].ejecutarCargasRespectivas()
             self.nodos[casillaO1].noPuedenMover()
 
     def resolverTurno(self):
         dondeDispara1 = self.dondeDispararFlechas(1)
         dondeDispara2 = self.dondeDispararFlechas(2)
+        if self.dondeEsta(Arquero(1)) != -1 and self.nodos[self.dondeEsta(Arquero(1))].fichaDefensora.faccion == 1:
+            disparoA1 = self.nodos[self.dondeEsta(Arquero(1))].fichaDefensora.realizarDisparo() if self.dondeEsta(Arquero(1))!=-1 else 0
+        else:
+            disparoA1 = self.nodos[self.dondeEsta(Arquero(1))].fichaAtacante.realizarDisparo() if self.dondeEsta(Arquero(1)) != -1 else 0
+        if self.dondeEsta(Arquero(2)) != -1 and self.nodos[self.dondeEsta(Arquero(2))].fichaDefensora.faccion == 2:
+            disparoA2 = self.nodos[self.dondeEsta(Arquero(2))].fichaDefensora.realizarDisparo() if self.dondeEsta(Arquero(2))!=-1 else 0
+        else:
+            disparoA2 = self.nodos[self.dondeEsta(Arquero(2))].fichaAtacante.realizarDisparo() if self.dondeEsta(Arquero(2))!=-1 else 0
         for i, elem in enumerate(self.nodos):
             if i in dondeDispara1 and not elem.hayDosFichas() and elem.estaAqui(2):
-                elem.recibirDisparo(self.nodos[self.dondeEsta(Arquero(1))].fichaDefensora.realizarDisparo())
+                elem.recibirDisparo(disparoA1)
             if i in dondeDispara2 and not elem.hayDosFichas() and elem.estaAqui(1):
-                elem.recibirDisparo(self.nodos[self.dondeEsta(Arquero(2))].fichaDefensora.realizarDisparo())
+                elem.recibirDisparo(disparoA2)
+            if type(elem.casilla).__name__ == 'Catapulta':
+                elem.casilla.disparo = False
             elem.resolverTurno()
 
     def haTerminado(self):
@@ -224,9 +235,10 @@ class Tablero:
     def dispararProyectiles(self, catapulta, x, y, ficha):
         cat = self.nodos[self.dondeEsta(catapulta)]
         casillaObjectivo = (4-y)*9 + x
-        if ficha and ficha == cat.fichaDefensora and not cat.hayDosFichas():
+        if ficha and ficha == cat.fichaDefensora and not cat.hayDosFichas() and not self.nodos[self.dondeEsta(catapulta)].casilla.disparo:
             self.nodos[casillaObjectivo].recibirDisparo(catapulta.realizarDisparo())
             self.nodos[casillaObjectivo].cayoProyectil = True
+            self.nodos[self.dondeEsta(catapulta)].casilla.disparo = True
 
     def hayFicha(self, casilla, faccion = None):
         return self.nodos[casilla].hayFicha(faccion) if faccion else self.nodos[casilla].hayFicha()
@@ -301,6 +313,14 @@ class Tablero:
         elif dondeEstaArquero == 44:
             self.eliminarDeLista(posiciones, 36,37)
 
+        i = 0
+        while i < len(posiciones):
+            if posiciones[i] < 0 or posiciones[i] >= 45:
+                posiciones.pop(i)
+            else:
+                i += 1
+
+
         fueraDeRango=[]
         for i in range(len(posiciones)):
             if posiciones[i] < 0 or posiciones[i] >= 45:
@@ -322,13 +342,13 @@ class Tablero:
             movPosibles.append(dondeEsta - 10)
         if dondeEsta - 1 >= 0:
             movPosibles.append(dondeEsta - 1)
-        if dondeEsta + 9 <= 45:
+        if dondeEsta + 9 < 45:
             movPosibles.append(dondeEsta + 9)
-        if dondeEsta + 8 <= 45:
+        if dondeEsta + 8 < 45:
             movPosibles.append(dondeEsta + 8)
-        if dondeEsta + 10 <= 45:
+        if dondeEsta + 10 < 45:
             movPosibles.append(dondeEsta + 10)
-        if dondeEsta + 1 <= 45:
+        if dondeEsta + 1 < 45:
             movPosibles.append(dondeEsta + 1)
 
         if dondeEsta == 0:
@@ -352,9 +372,12 @@ class Tablero:
         elif dondeEsta == 44:
             self.eliminarDeLista(movPosibles, 36)
 
+        movPosiblesEliminar = []
         for i in movPosibles:
-            if self.nodos[i].estaAqui(ficha.faccion) and i in movPosibles:
-                movPosibles.remove(i)
+            if self.nodos[i].estaAqui(ficha.faccion):
+                movPosiblesEliminar.append(i)
+        for i in movPosiblesEliminar:
+            movPosibles.remove(i)
 
         return movPosibles
 
