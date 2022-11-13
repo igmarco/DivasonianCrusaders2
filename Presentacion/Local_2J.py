@@ -139,10 +139,10 @@ def procesarComandos(partida, comando1, comando2):
             elif opElementos[1]=='caballero': f2 = Caballero(2)
 
             # o2 = Disparo(f2, int(opElementos[2]))
-            o2 = Disparo(f2, y=int(opElementos[2]), x=int(opElementos[3]))
+            o2 = Disparo(f2, x=int(opElementos[2]), y=int(opElementos[3]))
 
         instruccion2.append(o2)
 
     return instruccion1, instruccion2
 
-Local_2J('Jugador 1', 'Jugador 2')
+# Local_2J('Jugador 1', 'Jugador 2')

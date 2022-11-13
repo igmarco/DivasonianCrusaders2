@@ -19,30 +19,56 @@ def iniciarPintador(tablero):
     canvas.fill(FONDO)
     font = pygame.font.SysFont("comicsansms", TAMAÑO_LETRA)  # Para el tipo de letra
 
-    arqueroAzul = pygame.image.load("../Imagenes/ArqueroAzulC.png")
-    barbaroAzul = pygame.image.load("../Imagenes/BarbaroAzulC.png")
-    caballeroAzul = pygame.image.load("../Imagenes/CaballeroAzulC.png")
-    guerreroAzul = pygame.image.load("../Imagenes/GuerreroAzulC.png")
-    lanceroAzul = pygame.image.load("../Imagenes/LanceroAzulC.png")
+    # arqueroAzul = pygame.image.load("../Imagenes/ArqueroAzulC.png")
+    # barbaroAzul = pygame.image.load("../Imagenes/BarbaroAzulC.png")
+    # caballeroAzul = pygame.image.load("../Imagenes/CaballeroAzulC.png")
+    # guerreroAzul = pygame.image.load("../Imagenes/GuerreroAzulC.png")
+    # lanceroAzul = pygame.image.load("../Imagenes/LanceroAzulC.png")
+    #
+    # arqueroRojo = pygame.image.load("../Imagenes/ArqueroRojoC.png")
+    # barbaroRojo = pygame.image.load("../Imagenes/BarbaroRojoC.png")
+    # caballeroRojo = pygame.image.load("../Imagenes/CaballeroRojoC.png")
+    # guerreroRojo = pygame.image.load("../Imagenes/GuerreroRojoC.png")
+    # lanceroRojo = pygame.image.load("../Imagenes/LanceroRojoC.png")
+    #
+    # catapultaAzul = pygame.image.load("../Imagenes/CatapultaAzulC.png")
+    # coronaAzul = pygame.image.load("../Imagenes/CoronaAzul.png")
+    #
+    # catapultaRoja = pygame.image.load("../Imagenes/CatapultaRojaC.png")
+    # coronaRoja = pygame.image.load("../Imagenes/CoronaRojo.png")
+    #
+    # hacha = pygame.image.load("../Imagenes/HachaDivasonia.png")
+    # curarse = pygame.image.load("../Imagenes/CurarseC.png")
+    # colina = pygame.image.load("../Imagenes/ColinaC.png")
+    # proyectil = pygame.image.load("../Imagenes/impactoProyectilC.png")
+    # fondo = pygame.image.load("../Imagenes/capa.png")
+    #
+    # iconoRefachero = pygame.image.load("../Imagenes/iconoRefachero2.png")
 
-    arqueroRojo = pygame.image.load("../Imagenes/ArqueroRojoC.png")
-    barbaroRojo = pygame.image.load("../Imagenes/BarbaroRojoC.png")
-    caballeroRojo = pygame.image.load("../Imagenes/CaballeroRojoC.png")
-    guerreroRojo = pygame.image.load("../Imagenes/GuerreroRojoC.png")
-    lanceroRojo = pygame.image.load("../Imagenes/LanceroRojoC.png")
+    arqueroAzul = pygame.image.load("./Imagenes/ArqueroAzulC.png")
+    barbaroAzul = pygame.image.load("./Imagenes/BarbaroAzulC.png")
+    caballeroAzul = pygame.image.load("./Imagenes/CaballeroAzulC.png")
+    guerreroAzul = pygame.image.load("./Imagenes/GuerreroAzulC.png")
+    lanceroAzul = pygame.image.load("./Imagenes/LanceroAzulC.png")
 
-    catapultaAzul = pygame.image.load("../Imagenes/CatapultaAzulC.png")
-    coronaAzul = pygame.image.load("../Imagenes/CoronaAzul.png")
+    arqueroRojo = pygame.image.load("./Imagenes/ArqueroRojoC.png")
+    barbaroRojo = pygame.image.load("./Imagenes/BarbaroRojoC.png")
+    caballeroRojo = pygame.image.load("./Imagenes/CaballeroRojoC.png")
+    guerreroRojo = pygame.image.load("./Imagenes/GuerreroRojoC.png")
+    lanceroRojo = pygame.image.load("./Imagenes/LanceroRojoC.png")
 
-    catapultaRoja = pygame.image.load("../Imagenes/CatapultaRojaC.png")
-    coronaRoja = pygame.image.load("../Imagenes/CoronaRojo.png")
+    catapultaAzul = pygame.image.load("./Imagenes/CatapultaAzulC.png")
+    coronaAzul = pygame.image.load("./Imagenes/CoronaAzul.png")
 
-    hacha = pygame.image.load("../Imagenes/HachaDivasonia.png")
-    curarse = pygame.image.load("../Imagenes/CurarseC.png")
-    colina = pygame.image.load("../Imagenes/ColinaC.png")
-    fondo = pygame.image.load("../Imagenes/capa.png")
+    catapultaRoja = pygame.image.load("./Imagenes/CatapultaRojaC.png")
+    coronaRoja = pygame.image.load("./Imagenes/CoronaRojo.png")
 
-    iconoRefachero = pygame.image.load("../Imagenes/iconoRefachero2.png")
+    hacha = pygame.image.load("./Imagenes/HachaDivasonia.png")
+    curarse = pygame.image.load("./Imagenes/CurarseC.png")
+    colina = pygame.image.load("./Imagenes/ColinaC.png")
+    fondo = pygame.image.load("./Imagenes/capa.png")
+
+    iconoRefachero = pygame.image.load("./Imagenes/iconoRefachero2.png")
 
     arqueroAzul.convert()
     barbaroAzul.convert()
@@ -90,33 +116,56 @@ def pintar(canvas, tablero):
 
     pygame.event.get()
 
-    arqueroAzul = pygame.image.load("../Imagenes/ArqueroAzulC.png")
-    barbaroAzul = pygame.image.load("../Imagenes/BarbaroAzulC.png")
-    caballeroAzul = pygame.image.load("../Imagenes/CaballeroAzulC.png")
-    guerreroAzul = pygame.image.load("../Imagenes/GuerreroAzulC.png")
-    lanceroAzul = pygame.image.load("../Imagenes/LanceroAzulC.png")
+    # arqueroAzul = pygame.image.load("../Imagenes/ArqueroAzulC.png")
+    # barbaroAzul = pygame.image.load("../Imagenes/BarbaroAzulC.png")
+    # caballeroAzul = pygame.image.load("../Imagenes/CaballeroAzulC.png")
+    # guerreroAzul = pygame.image.load("../Imagenes/GuerreroAzulC.png")
+    # lanceroAzul = pygame.image.load("../Imagenes/LanceroAzulC.png")
+    #
+    # arqueroRojo = pygame.image.load("../Imagenes/ArqueroRojoC.png")
+    # barbaroRojo = pygame.image.load("../Imagenes/BarbaroRojoC.png")
+    # caballeroRojo = pygame.image.load("../Imagenes/CaballeroRojoC.png")
+    # guerreroRojo = pygame.image.load("../Imagenes/GuerreroRojoC.png")
+    # lanceroRojo = pygame.image.load("../Imagenes/LanceroRojoC.png")
+    #
+    # catapultaAzul = pygame.image.load("../Imagenes/CatapultaAzulC.png")
+    # coronaAzul = pygame.image.load("../Imagenes/CoronaAzul.png")
+    #
+    # catapultaRoja = pygame.image.load("../Imagenes/CatapultaRojaC.png")
+    # coronaRoja = pygame.image.load("../Imagenes/CoronaRojo.png")
+    #
+    # hacha = pygame.image.load("../Imagenes/HachaDivasonia.png")
+    # curarse = pygame.image.load("../Imagenes/CurarseC.png")
+    # colina = pygame.image.load("../Imagenes/ColinaC.png")
+    # proyectil = pygame.image.load("../Imagenes/impactoProyectilC.png")
+    # fondo = pygame.image.load("../Imagenes/capa.png")
+    #
+    # iconoRefachero = pygame.image.load("../Imagenes/iconoRefachero2.png")
 
-    arqueroRojo = pygame.image.load("../Imagenes/ArqueroRojoC.png")
-    barbaroRojo = pygame.image.load("../Imagenes/BarbaroRojoC.png")
-    caballeroRojo = pygame.image.load("../Imagenes/CaballeroRojoC.png")
-    guerreroRojo = pygame.image.load("../Imagenes/GuerreroRojoC.png")
-    lanceroRojo = pygame.image.load("../Imagenes/LanceroRojoC.png")
+    arqueroAzul = pygame.image.load("./Imagenes/ArqueroAzulC.png")
+    barbaroAzul = pygame.image.load("./Imagenes/BarbaroAzulC.png")
+    caballeroAzul = pygame.image.load("./Imagenes/CaballeroAzulC.png")
+    guerreroAzul = pygame.image.load("./Imagenes/GuerreroAzulC.png")
+    lanceroAzul = pygame.image.load("./Imagenes/LanceroAzulC.png")
 
-    catapultaAzul = pygame.image.load("../Imagenes/CatapultaAzulC.png")
-    coronaAzul = pygame.image.load("../Imagenes/CoronaAzul.png")
+    arqueroRojo = pygame.image.load("./Imagenes/ArqueroRojoC.png")
+    barbaroRojo = pygame.image.load("./Imagenes/BarbaroRojoC.png")
+    caballeroRojo = pygame.image.load("./Imagenes/CaballeroRojoC.png")
+    guerreroRojo = pygame.image.load("./Imagenes/GuerreroRojoC.png")
+    lanceroRojo = pygame.image.load("./Imagenes/LanceroRojoC.png")
 
-    catapultaRoja = pygame.image.load("../Imagenes/CatapultaRojaC.png")
-    coronaRoja = pygame.image.load("../Imagenes/CoronaRojo.png")
+    catapultaAzul = pygame.image.load("./Imagenes/CatapultaAzulC.png")
+    coronaAzul = pygame.image.load("./Imagenes/CoronaAzul.png")
 
-    hacha = pygame.image.load("../Imagenes/HachaDivasonia.png")
-    curarse = pygame.image.load("../Imagenes/CurarseC.png")
-    colina = pygame.image.load("../Imagenes/ColinaC.png")
-    proyectil = pygame.image.load("../Imagenes/impactoProyectilC.png")
-    fondo = pygame.image.load("../Imagenes/capa.png")
+    catapultaRoja = pygame.image.load("./Imagenes/CatapultaRojaC.png")
+    coronaRoja = pygame.image.load("./Imagenes/CoronaRojo.png")
 
-    iconoRefachero = pygame.image.load("../Imagenes/iconoRefachero2.png")
+    hacha = pygame.image.load("./Imagenes/HachaDivasonia.png")
+    curarse = pygame.image.load("./Imagenes/CurarseC.png")
+    colina = pygame.image.load("./Imagenes/ColinaC.png")
+    fondo = pygame.image.load("./Imagenes/capa.png")
 
-
+    iconoRefachero = pygame.image.load("./Imagenes/iconoRefachero2.png")
 
     for pos, nodo in enumerate(tablero.nodos):
         x,y = pos%9, pos//9

@@ -391,7 +391,7 @@ class Tablero:
         string = '===================================================\n'
         ind = 0
         for nodo in self.nodos:
-            string = string + '[' + str(4-ind//9) + ', ' + str(ind%9) + '] - ' + str(nodo) + '\n'
+            string = string + '[' + str(ind%9) + ', ' + str(4-ind//9) + '] - ' + str(nodo) + '\n'
             ind += 1
         return string + '===================================================\n'
 

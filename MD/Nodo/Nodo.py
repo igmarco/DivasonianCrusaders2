@@ -80,6 +80,11 @@ class Nodo():
                 self.fichaDefensora.curarse(self.casilla.curar() + self.casilla.curacionAuxiliar)
             if self.fichaAtacante is not None:
                 self.fichaAtacante.curarse(self.casilla.curar() + self.casilla.curacionAuxiliar)
+        else:
+            if self.fichaDefensora is not None:
+                self.fichaDefensora.curarse(self.casilla.curacionAuxiliar)
+            if self.fichaAtacante is not None:
+                self.fichaAtacante.curarse(self.casilla.curacionAuxiliar)
 
     def sufrirHacha(self):
         if self.fichaDefensora is not None:

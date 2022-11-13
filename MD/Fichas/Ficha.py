@@ -33,7 +33,7 @@ class Ficha:
 
     def sufrirHacha(self):
         if self.hachaDivasonica is not None:
-            self.vida = self.vida - self.hachaDivasonica.sufrirDano()
+            self.vida = self.vida - self.hachaDivasonica.sufrirDanoPorTurno()
 
     def curarse(self,v):
         self.vida = self.vida + v if self.vida + v < self.vidaMaxima else self.vidaMaxima
@@ -59,3 +59,6 @@ class Ficha:
     def copy(self):
         hacha = self.hachaDivasonica.copy() if self.hachaDivasonica else None
         return Ficha(self.faccion, hacha, self.dano, self.vida, self.vidaMaxima, self.danoVariable)
+
+    def code(self):
+        return type(self).__name__ + ' ' + str(self.faccion)
