@@ -55,7 +55,7 @@ def entrenarIAs(nombre1, nombre2, partidas=100):
     else:
         entrenar(IA1, IA2, nombre1, nombre2, partidas)
 
-def entrenar(IA1, IA2, nombre1, nombre2, partidas):
+def entrenar(IA1, IA2, nombre1, nombre2, partidas, sleep=0.1):
     nodoraiz1 = IA1
     nodoraiz2 = IA2
     for i in range(partidas):
@@ -85,16 +85,17 @@ def entrenar(IA1, IA2, nombre1, nombre2, partidas):
                 IA2.insert(instruccion2,0,0)
                 IA2 = IA2.get(code(instruccion2))
 
-            if code(instruccion2) in IA1.hijos:
-                IA1 = IA1.get(code(instruccion2))
+            codigoTablero = partida.tableroActual.codeTB()
+            if codigoTablero in IA1.hijos:
+                IA1 = IA1.get(codigoTablero)
             else:
-                IA1.insert(instruccion2, 0, 0)
-                IA1 = IA1.get(code(instruccion2))
-            if code(instruccion1) in IA2.hijos:
-                IA2 = IA2.get(code(instruccion1))
+                IA1.insert(codigoTablero, 0, 0)
+                IA1 = IA1.get(code(codigoTablero))
+            if code(codigoTablero) in IA2.hijos:
+                IA2 = IA2.get(code(codigoTablero))
             else:
-                IA2.insert(instruccion1, 0, 0)
-                IA2 = IA2.get(code(instruccion1))
+                IA2.insert(codigoTablero, 0, 0)
+                IA2 = IA2.get(code(codigoTablero))
 
 
             # print(code(instruccion1))
@@ -104,7 +105,7 @@ def entrenar(IA1, IA2, nombre1, nombre2, partidas):
             for ind, tablero in enumerate(partida.tablerosMovimientos):
                 # print('Tablero',ind, 'del turno', partida.turno)
                 # print(tablero)
-                # time.sleep(0.01)
+                # time.sleep(sleep)
                 pintar(pintador, tablero)
 
             # print('Tablero final del turno', partida.turno)
@@ -155,6 +156,8 @@ def entrenar(IA1, IA2, nombre1, nombre2, partidas):
 
     guardarIA(nombre1, nodoraiz1)
     guardarIA(nombre2, nodoraiz2)
+
+    print('Guardado')
 
     while (True):  # Esperar para cerrar la pantalla
         pygame.event.pump()
@@ -261,9 +264,9 @@ def elegirInstrucciones(IA1, IA2, partida):
 
     return instruccion1, instruccion2
 
-# IA1 = Node(0,0)
-# IA2 = Node(0,0)
-# guardarIA('Divasonianos', IA1)
-# guardarIA('Romerianos', IA2)
+IA1 = Node(0,0)
+IA2 = Node(0,0)
+guardarIA('Divasonianos', IA1)
+guardarIA('Romerianos', IA2)
 
-entrenarIAs('Divasonianos', 'Romerianos', 2)
+entrenarIAs('Divasonianos', 'Romerianos', 500)

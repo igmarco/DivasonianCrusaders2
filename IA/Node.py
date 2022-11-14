@@ -1,20 +1,21 @@
 from math import sqrt, log
 import json
 
-from comtypes.safearray import numpy
-
 from MD.Fichas.Arquero import Arquero
 from MD.Fichas.Guerrero import Guerrero
 from MD.Instruccion.Operacion import *
 
 def code(instruccion):
-    string = ''
-    for op in instruccion:
-        if op is None:
-            string += 'E,'
-        else:
-            string += op.code() + ','
-    return string[:-1]
+    if type(instruccion).__name__ == 'str':
+        return instruccion
+    else:
+        string = ''
+        for op in instruccion:
+            if op is None:
+                string += 'E,'
+            else:
+                string += op.code() + ','
+        return string[:-1]
 
 def decode(strinstruccion):
     instruccion = []

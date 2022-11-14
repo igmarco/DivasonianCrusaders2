@@ -48,7 +48,7 @@ class Tablero:
     def moverFicha(self, ficha, casillaO, casillaDest):
         if self.nodos[casillaO].hayDosFichas():
             self.nodos[casillaO].ejecutarAtaqueContraHuida(ficha)
-        if self.nodos[casillaO].estaAqui(ficha):
+        if self.nodos[casillaO].estaAqui(ficha) and not self.nodos[casillaDest].estaAqui(ficha.faccion):
             freal = self.nodos[casillaO].quitarFicha(ficha)
             self.nodos[casillaDest].ponerFicha(freal)
             if self.nodos[casillaDest].hayDosFichas():
@@ -154,28 +154,37 @@ class Tablero:
             self.nodos[casillaDest].ponerFicha(freal2)
 
     def cruzarFichas(self, ficha1, ficha2, casillaO1, casillaO2):
-        if  random.random() >= 0.5:
-            # self.moverFicha(ficha1, casillaO1, casillaO2)
+        if random.random() >= 0.5:
             freal = self.nodos[casillaO1].quitarFicha(ficha1)
             self.nodos[casillaO2].ponerFicha(freal)
             self.nodos[casillaO2].ejecutarCargasRespectivas()
             self.nodos[casillaO2].noPuedenMover()
         else:
-            # self.moverFicha(ficha2, casillaO2, casillaO1)
             freal = self.nodos[casillaO2].quitarFicha(ficha2)
             self.nodos[casillaO1].ponerFicha(freal)
             self.nodos[casillaO1].ejecutarCargasRespectivas()
             self.nodos[casillaO1].noPuedenMover()
 
+        # if len(type(casillaO1).__name__)%2 == 0:
+        #     freal = self.nodos[casillaO1].quitarFicha(ficha1)
+        #     self.nodos[casillaO2].ponerFicha(freal)
+        #     self.nodos[casillaO2].ejecutarCargasRespectivas()
+        #     self.nodos[casillaO2].noPuedenMover()
+        # else:
+        #     freal = self.nodos[casillaO2].quitarFicha(ficha2)
+        #     self.nodos[casillaO1].ponerFicha(freal)
+        #     self.nodos[casillaO1].ejecutarCargasRespectivas()
+        #     self.nodos[casillaO1].noPuedenMover()
+
     def resolverTurno(self):
         dondeDispara1 = self.dondeDispararFlechas(1)
         dondeDispara2 = self.dondeDispararFlechas(2)
         if self.dondeEsta(Arquero(1)) != -1 and self.nodos[self.dondeEsta(Arquero(1))].fichaDefensora.faccion == 1:
-            disparoA1 = self.nodos[self.dondeEsta(Arquero(1))].fichaDefensora.realizarDisparo() if self.dondeEsta(Arquero(1))!=-1 else 0
+            disparoA1 = self.nodos[self.dondeEsta(Arquero(1))].fichaDefensora.realizarDisparo()
         else:
             disparoA1 = self.nodos[self.dondeEsta(Arquero(1))].fichaAtacante.realizarDisparo() if self.dondeEsta(Arquero(1)) != -1 else 0
         if self.dondeEsta(Arquero(2)) != -1 and self.nodos[self.dondeEsta(Arquero(2))].fichaDefensora.faccion == 2:
-            disparoA2 = self.nodos[self.dondeEsta(Arquero(2))].fichaDefensora.realizarDisparo() if self.dondeEsta(Arquero(2))!=-1 else 0
+            disparoA2 = self.nodos[self.dondeEsta(Arquero(2))].fichaDefensora.realizarDisparo()
         else:
             disparoA2 = self.nodos[self.dondeEsta(Arquero(2))].fichaAtacante.realizarDisparo() if self.dondeEsta(Arquero(2))!=-1 else 0
         for i, elem in enumerate(self.nodos):
@@ -418,5 +427,17 @@ class Tablero:
             ind += 1
         return string + '===================================================\n'
 
+    def codeTB(self):
+        string = ''
+        fichas = {'Arquero':'A','Barbaro':'B','Caballero':'C','Guerrero':'G','Lancero':'L'}
+        for nodo in self.nodos:
+            if nodo.fichaDefensora:
+                string += fichas[type(nodo.fichaDefensora).__name__] + str(nodo.fichaDefensora.faccion)
+            if nodo.fichaAtacante:
+                string += fichas[type(nodo.fichaDefensora).__name__] + str(nodo.fichaDefensora.faccion)
+            string += ','
+        return string[:-1]
+
 # tablero = Tablero()
 # print(tablero)
+# print(tablero.codeTB())
