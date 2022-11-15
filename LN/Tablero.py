@@ -116,31 +116,31 @@ class Tablero:
                 self.nodos[casO1].ejecutarAtaqueContraHuida(ficha1)
             if self.nodos[casO2].hayDosFichas():
                 self.nodos[casO2].ejecutarAtaqueContraHuida(ficha2)
-            if self.nodos[casO1].estaAqui(ficha1) and self.nodos[casO2].estaAqui(ficha2):
+            if self.nodos[casO1].estaAqui(ficha1) and self.nodos[casO2].estaAqui(ficha2) and not self.nodos[dest].estaAqui(ficha1.faccion) and not self.nodos[dest].estaAqui(ficha2.faccion):
                 freal1 = self.nodos[casO1].quitarFicha(ficha1)
                 freal2 = self.nodos[casO2].quitarFicha(ficha2)
                 self.nodos[dest].ponerFicha(freal1)
                 self.nodos[dest].ponerFicha(freal2)
                 self.nodos[dest].ejecutarCargasRespectivas()
                 self.nodos[dest].noPuedenMover()
-            elif self.nodos[casO1].estaAqui(ficha1):
+            elif self.nodos[casO1].estaAqui(ficha1) and not self.nodos[dest].estaAqui(ficha1.faccion):
                 freal1 = self.nodos[casO1].quitarFicha(ficha1)
                 self.nodos[dest].ponerFicha(freal1)
-            elif self.nodos[casO2].estaAqui(ficha2):
+            elif self.nodos[casO2].estaAqui(ficha2) and not self.nodos[dest].estaAqui(ficha2.faccion):
                 freal2 = self.nodos[casO2].quitarFicha(ficha2)
                 self.nodos[dest].ponerFicha(freal2)
 
     def moverFichasDeLaMismaCasilla(self, ficha1, ficha2, casillaO, casillaDest1, casillaDest2):
         self.nodos[casillaO].ejecutarAtaquesDeHuidas()
         if 0 <= casillaDest1 <= 44:
-            if self.nodos[casillaO].estaAqui(ficha1):
+            if self.nodos[casillaO].estaAqui(ficha1) and not self.nodos[casillaDest1].estaAqui(ficha1.faccion):
                 freal1 = self.nodos[casillaO].quitarFicha(ficha1)
                 self.nodos[casillaDest1].ponerFicha(freal1)
                 if self.nodos[casillaDest1].hayDosFichas():
                     self.nodos[casillaDest1].ejecutarCarga()
                     self.nodos[casillaDest1].noPuedenMover()
         if 0 <= casillaDest2 <= 44:
-            if self.nodos[casillaO].estaAqui(ficha2):
+            if self.nodos[casillaO].estaAqui(ficha2) and not self.nodos[casillaDest2].estaAqui(ficha2.faccion):
                 freal2 = self.nodos[casillaO].quitarFicha(ficha2)
                 self.nodos[casillaDest2].ponerFicha(freal2)
                 if self.nodos[casillaDest2].hayDosFichas():
@@ -151,24 +151,25 @@ class Tablero:
     def moverFichasDeLaMismaCasillaALaMismaCasilla(self, ficha1, ficha2, casillaO, casillaDest):
         if 0 <= casillaDest <= 44:
             self.nodos[casillaO].ejecutarAtaquesDeHuidas()
-            if self.nodos[casillaO].estaAqui(ficha1):
+            if self.nodos[casillaO].estaAqui(ficha1) and not self.nodos[casillaDest].estaAqui(ficha1.faccion):
                 freal1 = self.nodos[casillaO].quitarFicha(ficha1)
                 self.nodos[casillaDest].ponerFicha(freal1)
-            if self.nodos[casillaO].estaAqui(ficha2):
+            if self.nodos[casillaO].estaAqui(ficha2) and not self.nodos[casillaDest].estaAqui(ficha2.faccion):
                 freal2 = self.nodos[casillaO].quitarFicha(ficha2)
                 self.nodos[casillaDest].ponerFicha(freal2)
 
     def cruzarFichas(self, ficha1, ficha2, casillaO1, casillaO2):
-        if random.random() >= 0.5:
-            freal = self.nodos[casillaO1].quitarFicha(ficha1)
-            self.nodos[casillaO2].ponerFicha(freal)
-            self.nodos[casillaO2].ejecutarCargasRespectivas()
-            self.nodos[casillaO2].noPuedenMover()
-        else:
-            freal = self.nodos[casillaO2].quitarFicha(ficha2)
-            self.nodos[casillaO1].ponerFicha(freal)
-            self.nodos[casillaO1].ejecutarCargasRespectivas()
-            self.nodos[casillaO1].noPuedenMover()
+        if not self.nodos[casillaO2].estaAqui(ficha1.faccion) and not self.nodos[casillaO1].estaAqui(ficha2.faccion):
+            if random.random() >= 0.5:
+                freal = self.nodos[casillaO1].quitarFicha(ficha1)
+                self.nodos[casillaO2].ponerFicha(freal)
+                self.nodos[casillaO2].ejecutarCargasRespectivas()
+                self.nodos[casillaO2].noPuedenMover()
+            else:
+                freal = self.nodos[casillaO2].quitarFicha(ficha2)
+                self.nodos[casillaO1].ponerFicha(freal)
+                self.nodos[casillaO1].ejecutarCargasRespectivas()
+                self.nodos[casillaO1].noPuedenMover()
 
     def resolverTurno(self):
         dondeDispara1 = self.dondeDispararFlechas(1)

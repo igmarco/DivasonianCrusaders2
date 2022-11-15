@@ -27,7 +27,10 @@ from Utilidades.Utilidades import Direccion
 epsilon = 0.5
 
 def Local_1J(nombreJ, nombreIA):
+
+    print('Cargando...')
     IA1 = cargarIA(nombreIA)
+    print('Cargado')
     nodoraiz1 = IA1
 
     rendicion1 = False
@@ -48,11 +51,13 @@ def Local_1J(nombreJ, nombreIA):
 
         if rendicion1:
             if rendicion1:
-                print("El jugador", nombreJ, "se ha rendido. Un tanto para,", nombreIA + ', otra victoria para las máquinas')
+                print("El jugador", nombreJ, "se ha rendido. Un tanto para,", nombreIA + ', otra inevitable victoria para las máquinas')
             break
 
-        instruccion1 = procesarComando(partida, comando1)
+        instruccion1 = procesarComando(comando1)
         instruccion2 = elegirInstruccion(partida, IA1)
+        print(instruccion1)
+        print(instruccion2)
 
         if code(instruccion1) in IA1.hijos:
             IA1 = IA1.get(code(instruccion1))
@@ -69,12 +74,12 @@ def Local_1J(nombreJ, nombreIA):
 
         partida.ejecutarTurno(instruccion1, instruccion2)
 
-        # for ind, tablero in enumerate(partida.tablerosMovimientos):
-        #     print('Tablero',ind, 'del turno', partida.turno)
-        #     print(tablero)
-        #
-        #     time.sleep(2)
-        #     pintar(pintador, tablero)
+        for ind, tablero in enumerate(partida.tablerosMovimientos):
+            print('Tablero',ind, 'del turno', partida.turno)
+            print(tablero)
+
+            time.sleep(2)
+            pintar(pintador, tablero)
 
         print('Tablero final del turno', partida.turno)
         print(partida.tableroActual)
@@ -92,17 +97,17 @@ def Local_1J(nombreJ, nombreIA):
         if partida.tableroActual.getGanador() == 1:
             while nodoBP.padre is not None:
                 nodoBP.simulations = nodoBP.simulations + 1
-                nodoBP.wins = nodoBP.wins + 1
+                nodoBP.wins = nodoBP.wins + 1 + (0.25 - partida.turno*0.005)
                 nodoBP = nodoBP.padre
         elif partida.tableroActual.getGanador() == 2:
             while nodoBP.padre is not None:
                 nodoBP.simulations = nodoBP.simulations + 1
-                nodoBP.wins = nodoBP.wins - 1
+                nodoBP.wins = nodoBP.wins - 1 + (0.25 - partida.turno*0.005)
                 nodoBP = nodoBP.padre
         elif partida.tableroActual.getGanador() == 0:
             while nodoBP.padre is not None:
                 nodoBP.simulations = nodoBP.simulations + 1
-                nodoBP.wins = nodoBP.wins + 0
+                nodoBP.wins = nodoBP.wins + 0 + (0.25 - partida.turno*0.005)
                 nodoBP = nodoBP.padre
 
     guardarIA(nombreIA, nodoraiz1)
@@ -118,10 +123,12 @@ def Local_1J(nombreJ, nombreIA):
                 sys.exit(0)  # salir del programa
 
 def cargarIA(nombre):
+    sys.setrecursionlimit(1500)
+
     contenido = os.listdir('saves')
     fichero = None
     for f in contenido:
-        if nombre in f and (fichero is None or f.split('_')[2]>fichero.split('_')[2]):
+        if f.split('_')[0] == 'IA' and nombre == f.split('_')[1] and (fichero is None or f.split('_')[2]>fichero.split('_')[2]):
             fichero = f
     if fichero is None:
         print('Error: Ninguna IA con ese nombre.')
@@ -137,6 +144,7 @@ def guardarIA(nombre, IA):
 
 def generarInstruccionAleatoria(tablero, faccion):
     instrElegida = []
+    movimientos = {'Arquero':0,'Barbaro':0,'Caballero':0,'Guerrero':0,'Lancero':0}
     for i in range(6):
         fichasCatapulta = []
         if tablero.nodos[tablero.dondeEsta(Catapulta(1))].hayFicha(faccion):
@@ -173,12 +181,13 @@ def generarInstruccionAleatoria(tablero, faccion):
                 else:
                     fichaElegida = listaFichasVivas[np.random.randint(len(listaFichasVivas))]
                     listaPosTablero = tablero.dondePuedeMover(fichaElegida)
-                    if len(listaPosTablero) == 0:
+                    if len(listaPosTablero) == 0 or fichaElegida.getMovs() <= movimientos[type(fichaElegida).__name__]:
                         instrElegida.append(None)
                     else:
                         posTablero = listaPosTablero[np.random.randint(len(listaPosTablero))]
                         instrElegida.append(Movimiento(fichaElegida, Direccion[posTablero-tablero.dondeEsta(fichaElegida)]))
                         tablero.moverFichaDireccion(fichaElegida, Direccion[posTablero-tablero.dondeEsta(fichaElegida)])
+                        movimientos[type(fichaElegida).__name__] += 1
             else:
                 instrElegida.append(None)
 
@@ -190,14 +199,14 @@ def elegirInstruccion(partida, IA1):
     tableroPrueba1 = partida.tableroActual.copy()
 
     if IA1.ultimo:
-        instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 1)
+        instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 2)
     else:
         instrMejores = []
         mejorInstr = list(IA1.hijos.keys())[0]
         for instr in IA1.hijos:
-            if IA1.puntuacion(mejorInstr,epsilon) < IA1.puntuacion(instr,epsilon):
+            if IA1.puntuacion(mejorInstr, epsilon) < IA1.puntuacion(instr, epsilon):
                 mejorInstr = instr
-        if IA1.puntuacion(mejorInstr, epsilon) > 0:
+        if IA1.puntuacion(mejorInstr, epsilon) >= 0:
             for instr in IA1.hijos:
                 if IA1.puntuacion(mejorInstr, epsilon) == IA1.puntuacion(instr, epsilon):
                     instrMejores.append(instr)
@@ -205,13 +214,13 @@ def elegirInstruccion(partida, IA1):
         else:
             existe = True
             while existe:
-                instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 1)
+                instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 2)
                 if code(instruccion1) not in IA1.hijos:
                     existe = False
 
     return instruccion1
 
-def procesarComando(partida, comando1):
+def procesarComando(comando1):
 
     comando1Splitted = comando1.replace(' ','').split(';')
 
@@ -252,4 +261,6 @@ def procesarComando(partida, comando1):
 
     return instruccion1
 
-Local_1J('Jugador 1', 'Romerianos')
+IA1 = Node(0,0)
+guardarIA('Nuevo', IA1)
+Local_1J('Jugador 1', 'Nuevo')

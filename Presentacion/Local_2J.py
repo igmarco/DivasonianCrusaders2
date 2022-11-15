@@ -39,7 +39,7 @@ def Local_2J(nombre1, nombre2):
                 print("El jugador", nombre1, "se ha rendido. Enhorabuena,", nombre1)
             break
 
-        instruccion1, instruccion2 = procesarComandos(partida, comando1, comando2)
+        instruccion1, instruccion2 = procesarComandos(comando1, comando2)
 
         partida.ejecutarTurno(instruccion1, instruccion2)
 
@@ -70,7 +70,7 @@ def Local_2J(nombre1, nombre2):
                 sys.exit(0)  # salir del programa
 
 
-def procesarComandos(partida, comando1, comando2):
+def procesarComandos(comando1, comando2):
 
     comando1Splitted = comando1.replace(' ','').split(';')
     comando2Splitted = comando2.replace(' ','').split(';')

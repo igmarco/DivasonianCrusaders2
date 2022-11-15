@@ -23,7 +23,7 @@ def cargarIA(nombre):
     contenido = os.listdir('saves')
     fichero = None
     for f in contenido:
-        if nombre in f and (fichero is None or f.split('_')[2]>fichero.split('_')[2]):
+        if f.split('_')[0] == 'IA' and nombre == f.split('_')[1] and (fichero is None or f.split('_')[2]>fichero.split('_')[2]):
             fichero = f
     if fichero is None:
         print('Error: Ninguna IA con ese nombre.')
@@ -66,6 +66,7 @@ def entrenarIAs(nombre1, nombre2, partidas=100, pintarTableros=False, sleep=0.1)
 def entrenar(IA1, IA2, nombre1, nombre2, partidas, pintarTableros=False, sleep=0.1):
     nodoraiz1 = IA1
     nodoraiz2 = IA2
+    pintador = None
     for i in range(partidas):
         partida = Partida()
         if pintarTableros:
@@ -253,7 +254,7 @@ def elegirInstrucciones(IA1, IA2, partida):
         for instr in IA1.hijos:
             if IA1.puntuacion(mejorInstr,epsilon) < IA1.puntuacion(instr,epsilon):
                 mejorInstr = instr
-        if IA1.puntuacion(mejorInstr, epsilon) > 0:
+        if IA1.puntuacion(mejorInstr, epsilon) >= 0:
             for instr in IA1.hijos:
                 if IA1.puntuacion(mejorInstr, epsilon) == IA1.puntuacion(instr, epsilon):
                     instrMejores.append(instr)
@@ -274,7 +275,7 @@ def elegirInstrucciones(IA1, IA2, partida):
         for instr in IA2.hijos:
             if IA2.puntuacion(mejorInstr,epsilon) < IA2.puntuacion(instr,epsilon):
                 mejorInstr = instr
-        if IA2.puntuacion(mejorInstr, epsilon) > 0:
+        if IA2.puntuacion(mejorInstr, epsilon) >= 0:
             for instr in IA2.hijos:
                 if IA2.puntuacion(mejorInstr, epsilon) == IA2.puntuacion(instr, epsilon):
                     instrMejores.append(instr)
@@ -293,6 +294,6 @@ def elegirInstrucciones(IA1, IA2, partida):
 # guardarIA('Divasonianos', IA1)
 # guardarIA('Romerianos', IA2)
 
-entrenarIAs('Divasonianos', 'Romerianos', 10000, pintarTableros=False)
+entrenarIAs('Divasonianos', 'Romerianos', 20000, pintarTableros=False)
 # entrenarIAs('Divasonianos', 'Romerianos', 25, pintarTableros=True)
 # entrenarIAs('Divasonianos', 'Romerianos', 1, pintarTableros=True, sleep=0.1)
