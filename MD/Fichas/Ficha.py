@@ -35,6 +35,9 @@ class Ficha:
         if self.hachaDivasonica is not None:
             self.vida = self.vida - self.hachaDivasonica.sufrirDanoPorTurno()
 
+    def sufrirCorrupcionRomeriana(self, corrupcion=2, corrupcionVariable=1):
+        self.vida = self.vida - self.vidaMaxima*corrupcion//100 - m.floor(np.random.rand()*2*(self.vidaMaxima*corrupcionVariable//100) - (self.vidaMaxima*corrupcionVariable//100))
+
     def curarse(self,v):
         self.vida = self.vida + v if self.vida + v < self.vidaMaxima else self.vidaMaxima
 
@@ -48,7 +51,7 @@ class Ficha:
         return self.realizarCarga(ficha)/2
 
     def getMovs(self):
-        return 2
+        return self.movs
 
     def __str__(self):
         if self.hachaDivasonica is not None:

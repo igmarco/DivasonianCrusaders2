@@ -51,6 +51,7 @@ class Nodo():
         self.resolverCombate()
         self.darCuracion()
         self.sufrirHacha()
+        self.sufrirCorrupcionRomeriana()
 
         self.comprobarMuertes()
 
@@ -91,6 +92,12 @@ class Nodo():
             self.fichaDefensora.sufrirHacha()
         if self.fichaAtacante is not None:
             self.fichaAtacante.sufrirHacha()
+
+    def sufrirCorrupcionRomeriana(self):
+        if self.fichaDefensora is not None:
+            self.fichaDefensora.sufrirCorrupcionRomeriana()
+        if self.fichaAtacante is not None:
+            self.fichaAtacante.sufrirCorrupcionRomeriana()
 
     def recibirDisparo(self, dano):
         if self.fichaDefensora is not None:

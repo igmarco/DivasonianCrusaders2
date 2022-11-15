@@ -1,0 +1,65 @@
+Divasonian Crusaders:
+
+1. Divasonian Crusaders fue un videojuego desarrollado por Pablo e Ignacio en el contexto de un trabajo de tema libre
+ de la asignatura Sistemas Distribuidos del Grado en Ingeniería Informática de la UR.
+ *Enseñar Divasonian Crusaders original.*
+
+2. El código poseía numerosos errores, especialmente en la interfaz gráfica (debido a que las herramientas que
+ empleamos no eran las más adecuadas). Por eso surgió la iniciativa de crear un código más limpio en java que no
+ emplease una interfaz gráfica sino solo por consola de comandos.
+
+3. Se nos ocurrió desarrollar una IA que jugase a Divasonian Crusaders, pero para ello debíamos traducir el código a
+ Python, así que así comenzó el trabajo.
+ *Recorrer el árbol de directorios del programa.*
+
+4. Traduje el programa con la ayuda de Pablo y desarrollé (basada en la del UR-Game) una interfaz que sencillamente
+ mostrase al usuario los movimientos que introducía mediante la consola de comandos, lo que suponía un punto intermedio
+ que no tuviese ni la complejidad de programar una interfaz gráfica interactiva ni la abstracción que tiene la
+ representación del tablero mediante la consola de comandos.
+ *Mostrar Local_2J.py.*
+
+5. Una vez estaba esa base, comencé a desarrollar la clase Node, que permite construir los árboles de Monte Carlo.
+ *Mostrar Node.py.*
+
+6. Hecho eso, creé el generador de instrucciones aleatorias y el entrenador en general, siguiendo lo que había
+ construido en el ejercicio opcional de MCTS de la práctica 2 de la asignatura.
+ *Mostrar EntrenadorIAs.py.*
+
+7. Además de los errores que tuve que hacer frente relativos al entrenamiento de la IA en sí, pude descubrir la mayor
+ parte de los errores de traducción que había tenido y que todavía no había descubierto. Tras alcanzar el punto en el
+ que la IA podía entrenarse, empecé a descubrir errores en la lógica de negocio del juego que se encontraban también en
+ la primera versión del juego, cuya casuística era tan anómala que no la habíamos logrado detectar al desarrollar el
+ programa en java.
+
+8. El problema más difícil de afrontar a la hora de crear el entrenador de la IA fue el hecho de que, además de depender
+ de las instrucciones de uno y otro jugador, el juego posee ciertas componentes aleatorias que hacen que dos partidas
+ con las mismas instrucciones puedan dar lugar a resoluciones distintas, por lo que tuve problemas a la hora de escoger
+ instrucciones sobre la base de los conocimientos aprendidos.
+
+9. Una vez desarrollado el entrenador de la IA, solo faltaba crear una modalidad de 1 jugador en la que se pudiesen
+ enfrentar jugadores reales con IAs.
+ *Mostrar Local_1J.py.*
+
+10. De momento, las IAs que tengo son las siguientes:
+ *Mostrar IAs.*
+ - Prueba - Primera prueba.
+ - DivasonianosPrototipo1 - Sistema antiguo para expresar la situación general de la partida.
+ - DivasonianosPrototipo2 - Podía hacer todos los movimientos que quisiera por cada ficha en cada turno.
+ - DivasonianosPrototipo3 - Construido sin penalización por tardar demasiado.
+ - DivasonianosPrototipo4 - Construido sin Corrupción Romeriana.
+
+11. ¿Cuál es el gran problema del MCTS? Que si con cada movimiento no se avanza necesariamente más hacia el final de la
+ partida, entonces tarda mucho en converger. ¿Solución? Agregar la Corrupción Romeriana, que resta a cada ficha un
+ porcentaje de su vida máxima por turno.
+
+12. Faltaría para completar el trabajo entrenar lo suficiente a la IA como para poder rivalizar con jugadores humanos,
+ permitiendo descubrir cuáles son los errores más conceptuales o las estrategias más recomendables del juego. Por
+ ejemplo, considerando la Corrupción Romeriana, una estrategia que la IA suele tomar es quedarse cerca de las casillas
+ de curación.
+
+13. También se podría, por supuesto, modificar los patrones de generación de instrucciones aleatorias y especialmente
+ las estrategias de recompensa. Concretamente, podría ser positivo influir en los premios en función de:
+ - si ha acabado por aniquilación o por captura de corona.
+ - si ha tardado muchos turnos.
+ - si ha realizado cargas con los arqueros o con los caballeros.
+ - si ha minimizado el número de esperas.
