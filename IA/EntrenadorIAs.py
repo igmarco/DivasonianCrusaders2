@@ -280,6 +280,6 @@ def elegirInstrucciones(IA1, IA2, partida):
 # guardarIA('Divasonianos', IA1)
 # guardarIA('Romerianos', IA2)
 
-entrenarIAs('DivasonianosPotentes', 'RomerianosPotentes', 20000, pintarTableros=False)
+entrenarIAs('Divasonianos', 'Romerianos', 100, pintarTableros=False)
 # entrenarIAs('Divasonianos', 'Romerianos', 25, pintarTableros=True)
 # entrenarIAs('Divasonianos', 'Romerianos', 1, pintarTableros=True, sleep=0.1)

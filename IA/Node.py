@@ -79,6 +79,8 @@ def fromDictionary(diccionario):
         nodeHijo = fromDictionary(hijo['hijo'])
         nodeHijo.padre = node
         node.hijos[hijo['instruccion']] = nodeHijo
+    if len(diccionario['hijos'])>0:
+        node.ultimo=False
     return node
 
 # root = Node(0,1)
