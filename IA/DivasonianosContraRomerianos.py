@@ -15,7 +15,7 @@ from Utilidades.Utilidades import Direccion
 
 import sys
 
-epsilon = m.sqrt(2)
+epsilon = 0
 
 def cargarIA(nombre):
     sys.setrecursionlimit(1500)
@@ -31,11 +31,6 @@ def cargarIA(nombre):
     else:
         f = open('saves/' + fichero, 'r')
         return fromJSON(f.read())
-
-def guardarIA(nombre, IA):
-    f = open('saves/IA_'+nombre+'_'+"%s%03d" % (datetime.utcnow().strftime('%Y%m%d%H%M%S.%f').split('.')[0], int(datetime.utcnow().strftime('%Y%m%d%H%M%S.%f').split('.')[1]) / 1000)+'.txt', 'w')
-    f.write(IA.toJSON())
-    f.close()
 
 def entrenarIAs(nombre1, nombre2, partidas=100, pintarTableros=False, sleep=0.1):
 
@@ -69,11 +64,13 @@ def entrenar(IA1, IA2, nombre1, nombre2, partidas, pintarTableros=False, sleep=0
         if pintarTableros:
             pintar(pintador, partida.tableroActual)
 
-        turnosNoAleatorios = 0
+        turnosNoAleatorios1 = 0
+        turnosNoAleatorios2 = 0
 
         while not partida.haTerminado:
-            instruccion1, instruccion2, aleatoria = elegirInstrucciones(IA1, IA2, partida)
-            turnosNoAleatorios += 0 if aleatoria else 1
+            instruccion1, instruccion2, aleatoria1, aleatoria2 = elegirInstrucciones(IA1, IA2, partida)
+            turnosNoAleatorios1 += 0 if aleatoria1 else 1
+            turnosNoAleatorios2 += 0 if aleatoria2 else 1
 
             if code(instruccion1) in IA1.hijos:
                 IA1 = IA1.get(code(instruccion1))
@@ -117,11 +114,11 @@ def entrenar(IA1, IA2, nombre1, nombre2, partidas, pintarTableros=False, sleep=0
                 pintar(pintador, partida.tableroActual)
 
         if partida.tableroActual.getGanador() == 1:
-            print('Enhorabuena, ha ganado', nombre1, 'en el turno', partida.turno, ' (' + str(turnosNoAleatorios), 'turnos no aleatorios)')
+            print('Enhorabuena, ha ganado', nombre1, 'en el turno', partida.turno, ' (' + str(turnosNoAleatorios1),'y',str(turnosNoAleatorios2), 'turnos no aleatorios)')
         if partida.tableroActual.getGanador() == 2:
-            print('Enhorabuena, ha ganado', nombre2, 'en el turno', partida.turno, ' (' + str(turnosNoAleatorios), 'turnos no aleatorios)')
+            print('Enhorabuena, ha ganado', nombre2, 'en el turno', partida.turno, ' (' + str(turnosNoAleatorios1),'y',str(turnosNoAleatorios2), 'turnos no aleatorios)')
         elif partida.tableroActual.getGanador() == 0:
-            print('Nada mal,', nombre1, 'y', nombre2 + ', ha habido un empate en el turno', partida.turno, ' (' + str(turnosNoAleatorios), 'turnos no aleatorios)')
+            print('Nada mal,', nombre1, 'y', nombre2 + ', ha habido un empate en el turno', partida.turno, ' (' + str(turnosNoAleatorios1),'y',str(turnosNoAleatorios2), 'turnos no aleatorios)')
 
         #Aquí toca hacer el back propagation.
         nodoBP = IA1
@@ -157,11 +154,6 @@ def entrenar(IA1, IA2, nombre1, nombre2, partidas, pintarTableros=False, sleep=0
                 nodoBP.simulations = nodoBP.simulations + 1
                 nodoBP.wins = nodoBP.wins + 0 + (0.25 - partida.turno*0.005)
                 nodoBP = nodoBP.padre
-
-    print('Guardando...')
-    guardarIA(nombre1, nodoraiz1)
-    guardarIA(nombre2, nodoraiz2)
-    print('Guardado')
 
     if pintarTableros:
         while (True):  # Esperar para cerrar la pantalla
@@ -229,57 +221,37 @@ def elegirInstrucciones(IA1, IA2, partida):
     tableroPrueba1 = partida.tableroActual.copy()
     tableroPrueba2 = partida.tableroActual.copy()
 
-    aleatoria = False
+    aleatoria1 = False
+    aleatoria2 = False
 
     if IA1.ultimo:
         instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 1)
-        aleatoria = True
+        aleatoria1 = True
     else:
         instrMejores = []
         mejorInstr = list(IA1.hijos.keys())[0]
         for instr in IA1.hijos:
             if IA1.puntuacion(mejorInstr,epsilon) < IA1.puntuacion(instr,epsilon):
                 mejorInstr = instr
-        if IA1.puntuacion(mejorInstr, epsilon) >= 0:
-            for instr in IA1.hijos:
-                if IA1.puntuacion(mejorInstr, epsilon) == IA1.puntuacion(instr, epsilon):
-                    instrMejores.append(instr)
-            instruccion1 = decode(instrMejores[np.random.randint(len(instrMejores))])
-        else:
-            existe = True
-            while existe:
-                instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 1)
-                aleatoria = True
-                if code(instruccion1) not in IA1.hijos:
-                    existe = False
+                for instr in IA1.hijos:
+                    if IA1.puntuacion(mejorInstr, epsilon) == IA1.puntuacion(instr, epsilon):
+                        instrMejores.append(instr)
+                instruccion1 = decode(instrMejores[np.random.randint(len(instrMejores))])
 
     if IA2.ultimo:
         instruccion2 = generarInstruccionAleatoria(tableroPrueba2, 2)
+        aleatoria2 = True
     else:
         instrMejores = []
         mejorInstr = list(IA2.hijos.keys())[0]
         for instr in IA2.hijos:
             if IA2.puntuacion(mejorInstr,epsilon) < IA2.puntuacion(instr,epsilon):
                 mejorInstr = instr
-        if IA2.puntuacion(mejorInstr, epsilon) >= 0:
-            for instr in IA2.hijos:
-                if IA2.puntuacion(mejorInstr, epsilon) == IA2.puntuacion(instr, epsilon):
-                    instrMejores.append(instr)
-            instruccion2 = decode(instrMejores[np.random.randint(0, len(instrMejores))])
-        else:
-            existe = True
-            while existe:
-                instruccion2 = generarInstruccionAleatoria(tableroPrueba2, 2)
-                if code(instruccion2) not in IA2.hijos:
-                    existe = False
+                for instr in IA2.hijos:
+                    if IA2.puntuacion(mejorInstr, epsilon) == IA2.puntuacion(instr, epsilon):
+                        instrMejores.append(instr)
+                instruccion2 = decode(instrMejores[np.random.randint(0, len(instrMejores))])
 
-    return instruccion1, instruccion2, aleatoria
+    return instruccion1, instruccion2, aleatoria1, aleatoria2
 
-# IA1 = Node(0,0)
-# IA2 = Node(0,0)
-# guardarIA('Divasonianos', IA1)
-# guardarIA('Romerianos', IA2)
-
-entrenarIAs('DivasonianosPotentes', 'RomerianosPotentes', 20000, pintarTableros=False)
-# entrenarIAs('Divasonianos', 'Romerianos', 25, pintarTableros=True)
-# entrenarIAs('Divasonianos', 'Romerianos', 1, pintarTableros=True, sleep=0.1)
+entrenarIAs('DivasonianosPotentes', 'RomerianosPotentes', 1, pintarTableros=True, sleep=0.1)
