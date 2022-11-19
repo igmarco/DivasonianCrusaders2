@@ -270,43 +270,4 @@ def elegirInstrucciones(IA1, IA2, partida):
 
     return instruccion1, instruccion2, aleatoria1, aleatoria2
 
-# def elegirInstrucciones(IA1, IA2, partida):
-#     instruccion1, instruccion2 = [], []
-#
-#     tableroPrueba1 = partida.tableroActual.copy()
-#     tableroPrueba2 = partida.tableroActual.copy()
-#
-#     aleatoria1 = False
-#     aleatoria2 = False
-#
-#     if IA1.ultimo:
-#         instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 1)
-#         aleatoria1 = True
-#     else:
-#         instrMejores = []
-#         mejorInstr = list(IA1.hijos.keys())[0]
-#         for instr in IA1.hijos:
-#             if IA1.puntuacion(mejorInstr,epsilon) < IA1.puntuacion(instr,epsilon):
-#                 mejorInstr = instr
-#                 for instr in IA1.hijos:
-#                     if IA1.puntuacion(mejorInstr, epsilon) == IA1.puntuacion(instr, epsilon):
-#                         instrMejores.append(instr)
-#                 instruccion1 = decode(instrMejores[np.random.randint(len(instrMejores))])
-#
-#     if IA2.ultimo:
-#         instruccion2 = generarInstruccionAleatoria(tableroPrueba2, 2)
-#         aleatoria2 = True
-#     else:
-#         instrMejores = []
-#         mejorInstr = list(IA2.hijos.keys())[0]
-#         for instr in IA2.hijos:
-#             if IA2.puntuacion(mejorInstr,epsilon) < IA2.puntuacion(instr,epsilon):
-#                 mejorInstr = instr
-#                 for instr in IA2.hijos:
-#                     if IA2.puntuacion(mejorInstr, epsilon) == IA2.puntuacion(instr, epsilon):
-#                         instrMejores.append(instr)
-#                 instruccion2 = decode(instrMejores[np.random.randint(0, len(instrMejores))])
-#
-#     return instruccion1, instruccion2, aleatoria1, aleatoria2
-
-entrenarIAs('DivasonianosPotentes', 'RomerianosPotentes', 1, pintarTableros=True, sleep=0.1)
+entrenarIAs('DivasonianosPotentes', 'RomerianosPotentes', 1, pintarTableros=True, sleep=0.01)
