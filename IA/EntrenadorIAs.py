@@ -274,11 +274,11 @@ def elegirInstrucciones(IA1, IA2, partida):
 
     return instruccion1, instruccion2, aleatoria
 
-IA1 = Node(0,0)
-IA2 = Node(0,0)
-guardarIA('Divasonianos', IA1)
-guardarIA('Romerianos', IA2)
+# IA1 = Node(0,0)
+# IA2 = Node(0,0)
+# guardarIA('Divasonianos', IA1)
+# guardarIA('Romerianos', IA2)
 
-entrenarIAs('Divasonianos', 'Romerianos', 100, pintarTableros=False)
+entrenarIAs('Divasonianos', 'Romerianos', 10000, pintarTableros=False)
 # entrenarIAs('Divasonianos', 'Romerianos', 25, pintarTableros=True)
 # entrenarIAs('Divasonianos', 'Romerianos', 1, pintarTableros=True, sleep=0.1)
