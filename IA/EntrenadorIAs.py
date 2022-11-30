@@ -14,8 +14,6 @@ from Utilidades.Utilidades import Direccion
 
 import sys
 
-epsilon = m.sqrt(2)
-
 def cargarIA(nombre):
     sys.setrecursionlimit(1500)
 
@@ -36,22 +34,28 @@ def guardarIA(nombre, IA):
     f.write(IA.toJSON())
     f.close()
 
-def entrenarIAs(nombre1, nombre2, partidas=100, pintarTableros=False, sleep=0.1):
+def entrenarIAs(nombre1, nombre2, partidas=100, pintarTableros=False, sleep=0.1, mostrarPorcentaje=False, mejora = True, epsilon = m.sqrt(2)):
 
     print('Cargando...')
     IA1 = cargarIA(nombre1)
     IA2 = cargarIA(nombre2)
+
+    # print(IA1)
+    # print(IA2)
+
     print('Cargado')
 
     if IA1 is None or IA2 is None:
         print('Error al cargar las IAs')
     else:
-        entrenar(IA1, IA2, nombre1, nombre2, partidas, pintarTableros, sleep)
+        entrenar(IA1, IA2, nombre1, nombre2, partidas, pintarTableros, sleep, mostrarPorcentaje, mejora, epsilon)
 
-def entrenar(IA1, IA2, nombre1, nombre2, partidas, pintarTableros=False, sleep=0.1):
+def entrenar(IA1, IA2, nombre1, nombre2, partidas, pintarTableros=False, sleep=0.1, mostrarPorcentaje=False, mejora = True, epsilon = m.sqrt(2)):
     nodoraiz1 = IA1
     nodoraiz2 = IA2
     pintador = None
+    porcentaje1 = (0,0)
+    porcentaje2 = (0,0)
     for i in range(partidas):
         partida = Partida()
         if pintarTableros:
@@ -68,11 +72,20 @@ def entrenar(IA1, IA2, nombre1, nombre2, partidas, pintarTableros=False, sleep=0
         if pintarTableros:
             pintar(pintador, partida.tableroActual)
 
-        turnosNoAleatorios = 0
+        turnosNoAleatorios1 = 0
+        turnosNoAleatorios2 = 0
 
         while not partida.haTerminado:
-            instruccion1, instruccion2, aleatoria = elegirInstrucciones(IA1, IA2, partida)
-            turnosNoAleatorios += 0 if aleatoria else 1
+            if mejora:
+                instruccion1, instruccion2, aleatoria1, aleatoria2 = elegirInstrucciones(IA1, IA2, partida, epsilon)
+            else:
+                instruccion1, instruccion2, aleatoria1, aleatoria2 = elegirInstruccionesNoAleatoriamente(IA1, IA2, partida, epsilon)
+            turnosNoAleatorios1 += 0 if aleatoria1 else 1
+            turnosNoAleatorios2 += 0 if aleatoria2 else 1
+
+            # print(code(instruccion1))
+            # print(code(instruccion2))
+            partida.ejecutarTurno(instruccion1, instruccion2)
 
             if code(instruccion1) in IA1.hijos:
                 IA1 = IA1.get(code(instruccion1))
@@ -97,11 +110,6 @@ def entrenar(IA1, IA2, nombre1, nombre2, partidas, pintarTableros=False, sleep=0
                 IA2.insert(codigoTablero, 0, 0)
                 IA2 = IA2.get(code(codigoTablero))
 
-
-            # print(code(instruccion1))
-            # print(code(instruccion2))
-            partida.ejecutarTurno(instruccion1, instruccion2)
-
             if pintarTableros:
                 for ind, tablero in enumerate(partida.tablerosMovimientos):
                     # print('Tablero',ind, 'del turno', partida.turno)
@@ -116,51 +124,116 @@ def entrenar(IA1, IA2, nombre1, nombre2, partidas, pintarTableros=False, sleep=0
                 pintar(pintador, partida.tableroActual)
 
         if partida.tableroActual.getGanador() == 1:
-            print('Enhorabuena, ha ganado', nombre1, 'en el turno', partida.turno, ' (' + str(turnosNoAleatorios), 'turnos no aleatorios)')
-        if partida.tableroActual.getGanador() == 2:
-            print('Enhorabuena, ha ganado', nombre2, 'en el turno', partida.turno, ' (' + str(turnosNoAleatorios), 'turnos no aleatorios)')
-        elif partida.tableroActual.getGanador() == 0:
-            print('Nada mal,', nombre1, 'y', nombre2 + ', ha habido un empate en el turno', partida.turno, ' (' + str(turnosNoAleatorios), 'turnos no aleatorios)')
-
-        #Aquí toca hacer el back propagation.
-        nodoBP = IA1
-        if partida.tableroActual.getGanador() == 1:
-            while nodoBP.padre is not None:
-                nodoBP.simulations = nodoBP.simulations + 1
-                nodoBP.wins = nodoBP.wins + 1 + (0.25 - partida.turno*0.005)
-                nodoBP = nodoBP.padre
+            print('Enhorabuena, ha ganado', nombre1, 'en el turno', partida.turno, ' (' + str(turnosNoAleatorios1), '-', str(turnosNoAleatorios2), 'turnos no aleatorios)')
+            porcentaje1 = (porcentaje1[0] + 1, porcentaje1[1] + 1)
+            porcentaje2 = (porcentaje2[0] + 0, porcentaje2[1] + 1)
         elif partida.tableroActual.getGanador() == 2:
-            while nodoBP.padre is not None:
-                nodoBP.simulations = nodoBP.simulations + 1
-                nodoBP.wins = nodoBP.wins - 1 + (0.25 - partida.turno*0.005)
-                nodoBP = nodoBP.padre
+            print('Enhorabuena, ha ganado', nombre2, 'en el turno', partida.turno, ' (' + str(turnosNoAleatorios1), '-', str(turnosNoAleatorios2), 'turnos no aleatorios)')
+            porcentaje1 = (porcentaje1[0] + 0, porcentaje1[1] + 1)
+            porcentaje2 = (porcentaje2[0] + 1, porcentaje2[1] + 1)
         elif partida.tableroActual.getGanador() == 0:
-            while nodoBP.padre is not None:
-                nodoBP.simulations = nodoBP.simulations + 1
-                nodoBP.wins = nodoBP.wins + 0 + (0.25 - partida.turno*0.005)
-                nodoBP = nodoBP.padre
+            print('Nada mal,', nombre1, 'y', nombre2 + ', ha habido un empate en el turno', partida.turno, ' (' + str(turnosNoAleatorios1), '-', str(turnosNoAleatorios2), 'turnos no aleatorios)')
+            porcentaje1 = (porcentaje1[0] + 0, porcentaje1[1] + 1)
+            porcentaje2 = (porcentaje2[0] + 0, porcentaje2[1] + 1)
 
-        nodoBP = IA2
-        if partida.tableroActual.getGanador() == 2:
-            while nodoBP.padre is not None:
-                nodoBP.simulations = nodoBP.simulations + 1
-                nodoBP.wins = nodoBP.wins + 1 + (0.25 - partida.turno*0.005)
-                nodoBP = nodoBP.padre
-        elif partida.tableroActual.getGanador() == 1:
-            while nodoBP.padre is not None:
-                nodoBP.simulations = nodoBP.simulations + 1
-                nodoBP.wins = nodoBP.wins - 1 + (0.25 - partida.turno*0.005)
-                nodoBP = nodoBP.padre
-        elif partida.tableroActual.getGanador() == 0:
-            while nodoBP.padre is not None:
-                nodoBP.simulations = nodoBP.simulations + 1
-                nodoBP.wins = nodoBP.wins + 0 + (0.25 - partida.turno*0.005)
-                nodoBP = nodoBP.padre
+        if mejora:
+            #Aquí toca hacer el back propagation.
+            nodoBP = IA1
+            if partida.tableroActual.getGanador() == 1:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 1
+                    # print()
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP.wins = nodoBP.wins + 1 + (0.25 - partida.turno*0.005)
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP = nodoBP.padre
+            elif partida.tableroActual.getGanador() == 2:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 1
+                    # print()
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP.wins = nodoBP.wins - 1 + (0.25 - partida.turno*0.005)
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP = nodoBP.padre
+            elif partida.tableroActual.getGanador() == 0:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 1
+                    # print()
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP.wins = nodoBP.wins + 0 + (0.25 - partida.turno*0.005)
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP = nodoBP.padre
 
-    print('Guardando...')
-    guardarIA(nombre1, nodoraiz1)
-    guardarIA(nombre2, nodoraiz2)
-    print('Guardado')
+            nodoBP = IA2
+            if partida.tableroActual.getGanador() == 2:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 1
+                    # print()
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP.wins = nodoBP.wins + 1 + (0.25 - partida.turno*0.005)
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP = nodoBP.padre
+            elif partida.tableroActual.getGanador() == 1:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 1
+                    # print()
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP.wins = nodoBP.wins - 1 + (0.25 - partida.turno*0.005)
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP = nodoBP.padre
+            elif partida.tableroActual.getGanador() == 0:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 1
+                    # print()
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP.wins = nodoBP.wins + 0 + (0.25 - partida.turno*0.005)
+                    # print(nodoBP.wins, nodoBP.simulations)
+                    nodoBP = nodoBP.padre
+        else:
+            #Aquí toca hacer el back propagation.
+            nodoBP = IA1
+            if partida.tableroActual.getGanador() == 2:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 0
+                    nodoBP.wins = nodoBP.wins + 0 + (0 - partida.turno*0)
+                    nodoBP = nodoBP.padre
+            elif partida.tableroActual.getGanador() == 1:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 0
+                    nodoBP.wins = nodoBP.wins - 0 + (0 - partida.turno*0)
+                    nodoBP = nodoBP.padre
+            elif partida.tableroActual.getGanador() == 0:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 0
+                    nodoBP.wins = nodoBP.wins + 0 + (0 - partida.turno*0)
+                    nodoBP = nodoBP.padre
+
+            nodoBP = IA2
+            if partida.tableroActual.getGanador() == 2:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 0
+                    nodoBP.wins = nodoBP.wins + 0 + (0 - partida.turno*0)
+                    nodoBP = nodoBP.padre
+            elif partida.tableroActual.getGanador() == 1:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 0
+                    nodoBP.wins = nodoBP.wins - 0 + (0 - partida.turno*0)
+                    nodoBP = nodoBP.padre
+            elif partida.tableroActual.getGanador() == 0:
+                while nodoBP is not None:
+                    nodoBP.simulations = nodoBP.simulations + 0
+                    nodoBP.wins = nodoBP.wins + 0 + (0 - partida.turno*0)
+                    nodoBP = nodoBP.padre
+
+    if mostrarPorcentaje:
+        print('Porcentaje Divasonianos:', porcentaje1[0], '/', porcentaje1[1])
+        print('Porcentaje Romerianos:', porcentaje2[0], '/', porcentaje2[1])
+
+    if mejora:
+        print('Guardando...')
+        guardarIA(nombre1, nodoraiz1)
+        guardarIA(nombre2, nodoraiz2)
+        print('Guardado')
 
     if pintarTableros:
         while (True):  # Esperar para cerrar la pantalla
@@ -222,23 +295,27 @@ def generarInstruccionAleatoria(tablero, faccion):
 
     return instrElegida
 
-def elegirInstrucciones(IA1, IA2, partida):
+def elegirInstrucciones(IA1, IA2, partida, epsilon):
     instruccion1, instruccion2 = [], []
 
     tableroPrueba1 = partida.tableroActual.copy()
     tableroPrueba2 = partida.tableroActual.copy()
 
-    aleatoria = False
+    aleatoria1 = False
+    aleatoria2 = False
 
     if IA1.ultimo:
         instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 1)
-        aleatoria = True
+        aleatoria1 = True
     else:
         instrMejores = []
         mejorInstr = list(IA1.hijos.keys())[0]
+        # print('Selección de mejor instrucción 1')
         for instr in IA1.hijos:
+            # print(IA1.puntuacion(mejorInstr,epsilon), IA1.puntuacion(instr,epsilon))
             if IA1.puntuacion(mejorInstr,epsilon) < IA1.puntuacion(instr,epsilon):
                 mejorInstr = instr
+        # print('Al final me quedo con',IA1.puntuacion(mejorInstr, epsilon))
         if IA1.puntuacion(mejorInstr, epsilon) >= 0:
             for instr in IA1.hijos:
                 if IA1.puntuacion(mejorInstr, epsilon) == IA1.puntuacion(instr, epsilon):
@@ -248,18 +325,22 @@ def elegirInstrucciones(IA1, IA2, partida):
             existe = True
             while existe:
                 instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 1)
-                aleatoria = True
+                aleatoria1 = True
                 if code(instruccion1) not in IA1.hijos:
                     existe = False
 
     if IA2.ultimo:
         instruccion2 = generarInstruccionAleatoria(tableroPrueba2, 2)
+        aleatoria2 = True
     else:
         instrMejores = []
         mejorInstr = list(IA2.hijos.keys())[0]
+        # print('Selección de mejor instrucción 2')
         for instr in IA2.hijos:
+            # print(IA2.puntuacion(mejorInstr,epsilon), IA2.puntuacion(instr,epsilon))
             if IA2.puntuacion(mejorInstr,epsilon) < IA2.puntuacion(instr,epsilon):
                 mejorInstr = instr
+        # print('Al final me quedo con',IA2.puntuacion(mejorInstr, epsilon))
         if IA2.puntuacion(mejorInstr, epsilon) >= 0:
             for instr in IA2.hijos:
                 if IA2.puntuacion(mejorInstr, epsilon) == IA2.puntuacion(instr, epsilon):
@@ -269,16 +350,83 @@ def elegirInstrucciones(IA1, IA2, partida):
             existe = True
             while existe:
                 instruccion2 = generarInstruccionAleatoria(tableroPrueba2, 2)
+                aleatoria2 = True
                 if code(instruccion2) not in IA2.hijos:
                     existe = False
 
-    return instruccion1, instruccion2, aleatoria
+    # print(aleatoria1)
+    # print(aleatoria2)
+    return instruccion1, instruccion2, aleatoria1, aleatoria2
+
+def elegirInstruccionesNoAleatoriamente(IA1, IA2, partida, epsilon=0):
+    instruccion1, instruccion2 = [], []
+
+    tableroPrueba1 = partida.tableroActual.copy()
+    tableroPrueba2 = partida.tableroActual.copy()
+
+    aleatoria1 = False
+    aleatoria2 = False
+
+    if IA1.ultimo:
+        instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 1)
+        aleatoria1 = True
+    else:
+        instrMejores = []
+        mejorInstr = list(IA1.hijos.keys())[0]
+        # print('Selección de mejor instrucción 1')
+        for instr in IA1.hijos:
+            # print(IA1.puntuacion(mejorInstr,epsilon), IA1.puntuacion(instr,epsilon))
+            if IA1.puntuacion(mejorInstr,epsilon) < IA1.puntuacion(instr,epsilon):
+                mejorInstr = instr
+        # print('Al final me quedo con',IA1.puntuacion(mejorInstr, epsilon))
+        if IA1.puntuacion(mejorInstr, epsilon) >= -10000:
+            for instr in IA1.hijos:
+                if IA1.puntuacion(mejorInstr, epsilon) == IA1.puntuacion(instr, epsilon):
+                    instrMejores.append(instr)
+            instruccion1 = decode(instrMejores[np.random.randint(len(instrMejores))])
+        else:
+            existe = True
+            while existe:
+                instruccion1 = generarInstruccionAleatoria(tableroPrueba1, 1)
+                aleatoria1 = True
+                if code(instruccion1) not in IA1.hijos:
+                    existe = False
+
+    if IA2.ultimo:
+        instruccion2 = generarInstruccionAleatoria(tableroPrueba2, 2)
+        aleatoria2 = True
+    else:
+        instrMejores = []
+        mejorInstr = list(IA2.hijos.keys())[0]
+        # print('Selección de mejor instrucción 2')
+        for instr in IA2.hijos:
+            # print(IA2.puntuacion(mejorInstr,epsilon), IA2.puntuacion(instr,epsilon))
+            if IA2.puntuacion(mejorInstr,epsilon) < IA2.puntuacion(instr,epsilon):
+                mejorInstr = instr
+        # print('Al final me quedo con',IA2.puntuacion(mejorInstr, epsilon))
+        if IA2.puntuacion(mejorInstr, epsilon) >= -10000:
+            for instr in IA2.hijos:
+                if IA2.puntuacion(mejorInstr, epsilon) == IA2.puntuacion(instr, epsilon):
+                    instrMejores.append(instr)
+            instruccion2 = decode(instrMejores[np.random.randint(0, len(instrMejores))])
+        else:
+            existe = True
+            while existe:
+                instruccion2 = generarInstruccionAleatoria(tableroPrueba2, 2)
+                aleatoria2 = True
+                if code(instruccion2) not in IA2.hijos:
+                    existe = False
+
+    # print(aleatoria1)
+    # print(aleatoria2)
+    return instruccion1, instruccion2, aleatoria1, aleatoria2
 
 # IA1 = Node(0,0)
 # IA2 = Node(0,0)
 # guardarIA('Divasonianos', IA1)
 # guardarIA('Romerianos', IA2)
 
-entrenarIAs('Divasonianos', 'Romerianos', 10000, pintarTableros=False)
+# entrenarIAs('Divasonianos', 'Romerianos', 5000, pintarTableros=False)
 # entrenarIAs('Divasonianos', 'Romerianos', 25, pintarTableros=True)
-# entrenarIAs('Divasonianos', 'Romerianos', 1, pintarTableros=True, sleep=0.1)
+# entrenarIAs('Divasonianos', 'Romerianos', 1, pintarTableros=True, sleep=0.1, mejora = False, epsilon=0)
+entrenarIAs('DivasonianosANTIGUO', 'Romerianos', 1000, pintarTableros=False, mostrarPorcentaje=True, mejora=False, epsilon=0)

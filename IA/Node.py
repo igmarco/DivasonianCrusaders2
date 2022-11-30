@@ -66,6 +66,8 @@ class Node:
     def puntuacion(self, instruccion, epsilon):
         if self.get(instruccion) == None:
             return 0
+        elif self.get(instruccion).simulations == 0:
+            return -10000
         else:
             return self.get(instruccion).wins/self.get(instruccion).simulations + epsilon*sqrt(log(self.simulations+1)/self.get(instruccion).simulations)
 
@@ -74,7 +76,7 @@ def fromJSON(jsonData):
     return fromDictionary(diccionario)
 
 def fromDictionary(diccionario):
-    node = Node(int(diccionario['wins']),int(diccionario['simulations']))
+    node = Node(float(diccionario['wins']),int(diccionario['simulations']))
     for hijo in diccionario['hijos']:
         nodeHijo = fromDictionary(hijo['hijo'])
         nodeHijo.padre = node
